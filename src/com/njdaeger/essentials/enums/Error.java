@@ -113,6 +113,24 @@ public enum Error{
 			return error;
 		}
 		
+	},
+	PLAYER_IS_OPPED {
+		
+		@Override
+		public String sendError() {
+			String error = ChatColor.RED + "Cannot execute command. Target is opped.";
+			return error;
+		}
+		
+	},
+	INPUT_TOO_LARGE {
+
+		@Override
+		public String sendError() {
+			String error = ChatColor.RED + "The input used is too large.";
+			return error;
+		}
+		
 	};
 	
 	public abstract String sendError();

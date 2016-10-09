@@ -1,5 +1,6 @@
 package com.njdaeger.essentials.enums;
 
+
 public enum Permission {
 	
 	ESS_ALL {
@@ -117,6 +118,46 @@ public enum Permission {
 			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.broadcast");
 			return permission;
 		}
+	},
+	ESS_BURN {
+
+		@Override
+		public String getPermission() {
+			String permission = "essentials.burn";
+			return permission;
+		}
+
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.burn");
+			return permission;
+		}
+		@Override 
+		public String getCommand() {
+			String command = "/burn";
+			return command;
+		}
+		
+	},
+	ESS_BURN_OTHER {
+
+		@Override
+		public String getPermission() {
+			String permission = "essentials.burn.other";
+			return permission;
+		}
+
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.burn.other");
+			return permission;
+		}
+		@Override 
+		public String getCommand() {
+			String command = "/burn";
+			return command;
+		}
+		
 	},
 	ESS_CHATCOLOR {
 
@@ -242,7 +283,83 @@ public enum Permission {
 		}
 		
 	},
-	ESS_SERVER_INFO {
+	ESS_GOD{
+	
+		@Override
+		public String getPermission() {
+			String permission = "essentials.god";
+			return permission;
+		}
+	
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.god");
+			return permission;
+		}
+		@Override
+		public String getCommand() {
+			String command = "/god";
+			return command;
+		}
+		
+	}, ESS_GOD_OTHER{
+	
+		@Override
+		public String getPermission() {
+			String permission = "essentials.god.other";
+			return permission;
+		}
+	
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.god.other");
+			return permission;
+		}
+		@Override
+		public String getCommand() {
+			String command = "/god";
+			return command;
+		}
+		
+	}, ESS_NICK{
+	
+		@Override
+		public String getPermission() {
+			String permission = "essentials.nick";
+			return permission;
+		}
+	
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.nick");
+			return permission;
+		}
+		@Override
+		public String getCommand() {
+			String command = "/nick";
+			return command;
+		}
+	
+	}, ESS_NICK_OTHER{
+	
+		@Override
+		public String getPermission() {
+			String permission = "essentials.nick.other";
+			return permission;
+		}
+	
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.nick.other");
+			return permission;
+		}
+		@Override
+		public String getCommand() {
+			String command = "/nick";
+			return command;
+		}
+		
+	}, ESS_SERVER_INFO {
 		
 		@Override 
 		public String getCommand() {
@@ -297,86 +414,6 @@ public enum Permission {
 			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.speed.other");
 			return permission;
 		}
-	},
-	ESS_GOD {
-
-		@Override
-		public String getPermission() {
-			String permission = "essentials.god";
-			return permission;
-		}
-
-		@Override
-		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.god");
-			return permission;
-		}
-		@Override
-		public String getCommand() {
-			String command = "/god";
-			return command;
-		}
-		
-	},
-	ESS_GOD_OTHER {
-
-		@Override
-		public String getPermission() {
-			String permission = "essentials.god.other";
-			return permission;
-		}
-
-		@Override
-		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.god.other");
-			return permission;
-		}
-		@Override
-		public String getCommand() {
-			String command = "/god";
-			return command;
-		}
-		
-	},
-	ESS_NICK {
-
-		@Override
-		public String getPermission() {
-			String permission = "essentials.nick";
-			return permission;
-		}
-
-		@Override
-		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.nick");
-			return permission;
-		}
-		@Override
-		public String getCommand() {
-			String command = "/nick";
-			return command;
-		}
-	
-	}, 
-	ESS_NICK_OTHER {
-
-		@Override
-		public String getPermission() {
-			String permission = "essentials.nick.other";
-			return permission;
-		}
-
-		@Override
-		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.nick.other");
-			return permission;
-		}
-		@Override
-		public String getCommand() {
-			String command = "/nick";
-			return command;
-		}
-		
 	};
 	
 	public String perm = "";

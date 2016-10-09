@@ -4,73 +4,56 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.chat.chatcolor.ChatHandler;
-import com.configapi.configuration.PluginConfig;
 import com.njdaeger.essentials.commands.AfkCommand;
+import com.njdaeger.essentials.commands.BreakCommand;
 import com.njdaeger.essentials.commands.BroadcastCommand;
+import com.njdaeger.essentials.commands.BurnCommand;
 import com.njdaeger.essentials.commands.GamemodeCommand;
 import com.njdaeger.essentials.commands.GiveCommand;
 import com.njdaeger.essentials.commands.GodCommand;
 import com.njdaeger.essentials.commands.NickCommand;
 import com.njdaeger.essentials.commands.ServerInfoCommand;
-import com.njdaeger.essentials.enums.Permission;
+import com.njdaeger.essentials.commands.SpeedCommand;
 import com.njdaeger.essentials.listeners.AfkListener;
 
 public class Core extends JavaPlugin{
 	
 	public void generateConfig() {
-		PluginConfig.newConfig();
-		PluginConfig.getConfig().addDefault("working", true);
-		PluginConfig.save();
+		PluginConfiguration.generateNewConfig();
 	}
 	public void registerListeners() {
 		new AfkListener(this);
 		new ChatHandler(this);
 	}
 	public void registerCommands() {
-		Plugin.getCommand("afk", new AfkCommand()); //Finished ###NOTE### ADD CONSOLE SUPPORT
+		Plugin.getCommand("afk", new AfkCommand()); //Finished
 		Plugin.getCommand("broadcast", new BroadcastCommand()); //Finished
 		Plugin.getCommand("serverinfo", new ServerInfoCommand()); //Finished
-		Plugin.getCommand("gamemode", new GamemodeCommand()); //Finished ###NOTE### ADD CONSOLE SUPPORT
-		Plugin.getCommand("i", new GiveCommand()); //Finished ###NOTE### ADD CONSOLE SUPPORT
-		Plugin.getCommand("god", new GodCommand()); //Finished ###NOTE### ADD CONSOLE SUPPORT
-		Plugin.getCommand("nick", new NickCommand()); //FINISHED
+		Plugin.getCommand("gamemode", new GamemodeCommand()); //Finished
+		Plugin.getCommand("i", new GiveCommand()); //Finished 
+		Plugin.getCommand("god", new GodCommand()); //Finished 
+		Plugin.getCommand("nick", new NickCommand()); //Finished
+		Plugin.getCommand("break", new BreakCommand()); //Finished
+		Plugin.getCommand("burn", new BurnCommand()); //Finished
+		Plugin.getCommand("speed", new SpeedCommand()); //Testing
 		
 	}
 	public void registerPermissions() {
-		Util.register(Permission.ESS_AFK);
-		Util.register(Permission.ESS_AFK_OTHER);
-		Util.register(Permission.ESS_ALL);
-		Util.register(Permission.ESS_BACK);
-		Util.register(Permission.ESS_BAN);
-		Util.register(Permission.ESS_BREAK);
-		Util.register(Permission.ESS_BROADCAST);
-		Util.register(Permission.ESS_CHATCOLOR);
-		Util.register(Permission.ESS_FLY);
-		Util.register(Permission.ESS_FLY_OTHER);
-		Util.register(Permission.ESS_GAMEMODE);
-		Util.register(Permission.ESS_GAMEMODE_OTHER);
-		Util.register(Permission.ESS_SERVER_INFO);
-		Util.register(Permission.ESS_SPEED);
-		Util.register(Permission.ESS_SPEED_OTHER);
-		Util.register(Permission.ESS_GIVE);
-		Util.register(Permission.ESS_GIVE_OTHER);
-		Util.register(Permission.ESS_GOD);
-		Util.register(Permission.ESS_GOD_OTHER);
-		Util.register(Permission.ESS_NICK);
-		Util.register(Permission.ESS_NICK_OTHER);
-		
-		
+		Util.generatePermissions();
+		Bukkit.getLogger().info("[EssentialCommands] Version " + this.getDescription().getVersion() + " by " + this.getDescription().getAuthors() + " is now Enabled!");
 	}
-	public void Runnable() {
-		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TPS(), 100L, 1L);
-	}
-	
+	/*
+	 * (non-Javadoc)
+	 * @see org.bukkit.plugin.java.JavaPlugin#onEnable()
+	 * check if the plugin is enabled with a checkenabled method and call it in the onenable.
+	 */
 	@Override
 	public void onEnable() {
+		TPS.getTPSClass();
 		generateConfig();
+		registerListeners();
 		registerCommands();
 		registerPermissions();
-		registerListeners();
 	}
 	
 	@Override

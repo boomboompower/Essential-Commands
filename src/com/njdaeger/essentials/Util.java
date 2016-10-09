@@ -10,9 +10,12 @@ import org.bukkit.plugin.PluginManager;
 import com.njdaeger.essentials.enums.Permission;
 
 public class Util {
-	public static void register(Permission permission) {
+	public static void generatePermissions() {
 		PluginManager pm = Bukkit.getServer().getPluginManager();
-		pm.addPermission(permission.registerPermission());
+		for (Permission perm : Permission.values()) {
+			Bukkit.getLogger().info("Registered permission: " + perm.getPermission());
+			pm.addPermission(perm.registerPermission());
+		}
 	}
 	public static boolean isAfk(Player p) {
 		if (Groups.afk.contains(p)) {
@@ -54,5 +57,14 @@ public class Util {
 			return true;
 		}
 		else return false;
+	}
+	public static boolean isNumber(String input) {
+		try {
+			Integer.parseInt(input);
+			return true;
+		}
+		catch (NumberFormatException e) {
+			return false;
+		}
 	}
 }

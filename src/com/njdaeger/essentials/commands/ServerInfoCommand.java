@@ -35,15 +35,19 @@ public class ServerInfoCommand extends BukkitCommand{
 			return true;
 		}
 		if (System.getProperty("os.name").startsWith("Windows")) {
+			
 			sndr.sendMessage(g + "=-=-=- " + a + "Server Information" + g + " -=-=-=");
 			sndr.sendMessage(g + "Server Name: " + a + Server.getName());
+			sndr.sendMessage(g + "Server TPS: " + a + this.formatTps(Server.getTPS()));
 			sndr.sendMessage(g + "Server Operating System: " + a + Server.getOS());
 			sndr.sendMessage(g + "Server Architecture: " + a + Server.getArchitecture());
 			sndr.sendMessage(g + "Server CPU Cores: " + a + Server.getCPU());
 			sndr.sendMessage(g + "Server CPU Usage: " + a + Server.getCPULoad());
 			sndr.sendMessage(g + "Server max RAM: " + a + Server.getMaxMemory() + "Mb");
 			sndr.sendMessage(g + "Server free RAM: " + a + Server.getFreeMemory() + "Mb");
+			sndr.sendMessage(g + "Server allocated RAM: " + a + Server.getAllocatedMemory() + "Mb");
 			sndr.sendMessage(g + "Server Port Number: " + a + Server.getPort());
+			
 			return true;
 		} else
 			try {
@@ -52,5 +56,15 @@ public class ServerInfoCommand extends BukkitCommand{
 				e.printStackTrace();
 			}
 		return true;
+	}
+	public String formatTps(String tps) {
+		double ticks = Double.parseDouble(tps);
+		if (ticks >= 18) {
+			return ChatColor.GREEN + tps;
+		}
+		else if (ticks >= 15) {
+			return ChatColor.YELLOW + tps;
+		}
+		else return ChatColor.RED + tps;
 	}
 }

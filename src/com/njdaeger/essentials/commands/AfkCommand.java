@@ -30,19 +30,36 @@ public class AfkCommand extends BukkitCommand{
 	public boolean execute(CommandSender sndr, String label, String[] args) {
 		
 		if (!(sndr instanceof Player)) {
-			sndr.sendMessage(Error.PLAYER_ONLY.sendError());
-			return true;
-		}
-		if (args.length == 1) {
-			Player player = Bukkit.getPlayer(args[0]);
-			if((sndr.hasPermission(Permission.ESS_AFK.getPermission()) && sndr.hasPermission(Permission.ESS_AFK_OTHER.getPermission())) || 
-					sndr.hasPermission(Permission.ESS_ALL.getPermission()) || sndr.isOp()) {
-				if (player.isOnline()) {
-					Util.setAfk(player);
+			if (args.length == 1) {
+				if (Bukkit.getPlayer(args[0]) == null) {
+					sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
 					return true;
 				}
 				else {
+					Player player = Bukkit.getPlayer(args[0]);
+					Util.setAfk(player);
+					return true;
+				}
+			} 
+			if (args.length == 0) {
+				sndr.sendMessage(Error.NOT_ENOUGH_ARGS.sendError());
+				return true;
+			} 
+			else {
+				sndr.sendMessage(Error.TOO_MANY_ARGS.sendError());
+				return true;
+			}
+		}
+		if (args.length == 1) {
+			if((sndr.hasPermission(Permission.ESS_AFK.getPermission()) && sndr.hasPermission(Permission.ESS_AFK_OTHER.getPermission())) || 
+					sndr.hasPermission(Permission.ESS_ALL.getPermission()) || sndr.isOp()) {
+				if (Bukkit.getPlayer(args[0]) == null) {
 					sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
+					return true;
+				}
+				else {
+					Player player = Bukkit.getPlayer(args[0]);
+					Util.setAfk(player);
 					return true;
 				}
 			} 
@@ -53,14 +70,8 @@ public class AfkCommand extends BukkitCommand{
 		}
 		if (args.length == 0) {
 			Player sender = (Player) sndr;
-			if (sndr.hasPermission(Permission.ESS_AFK.getPermission()) || sndr.hasPermission(Permission.ESS_ALL.getPermission()) || sndr.isOp()) {
-				Util.setAfk(sender);
-				return true;
-			} 
-			else {
-				sndr.sendMessage(Error.NO_PERMISSION.sendError());
-				return true;
-			}
+			Util.setAfk(sender);
+			return true;
 		} 
 		else {
 			sndr.sendMessage(Error.TOO_MANY_ARGS.sendError());

@@ -37,13 +37,14 @@ public class Server{
 	public static long getMaxMemory() {
 		return Runtime.getRuntime().maxMemory() / 1024 / 1024;
 	}
+	public static long getAllocatedMemory() {
+		return Runtime.getRuntime().totalMemory() / 1024 / 1024;
+	}
 	public static int getPort() {
 		return Bukkit.getServer().getPort();
 	}
-	public static double getTPS() {
-		double tps = TPS.getTps();
-		double finaltps = Math.round((1.0D - tps / 20.0D) * 100.0D);
-		return finaltps;
+	public static String getTPS() {
+		return TPS.getTPS();
 	}
 	public static String getName() {
 		return Bukkit.getServer().getServerName();

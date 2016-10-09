@@ -16,7 +16,6 @@ import com.njdaeger.essentials.Plugin;
 import com.njdaeger.essentials.Util;
 import com.njdaeger.essentials.enums.Error;
 import com.njdaeger.essentials.enums.Permission;
-import com.njdaeger.essentials.exceptions.UnknownException;
 import com.njdaeger.essentials.exceptions.UnknownItemException;
 
 public class GiveCommand extends BukkitCommand {
@@ -35,55 +34,30 @@ public class GiveCommand extends BukkitCommand {
 
 	@Override
 	public boolean execute(CommandSender sndr, String label, String[] args) {
-		Player player = (Player) sndr;
-		if (args.length == 0) {
-			sndr.sendMessage(Error.NOT_ENOUGH_ARGS.sendError());
-			return true;
-		}
-		if (args.length == 1) {
-			if (Util.hasFullInventory(player)) {
-				sndr.sendMessage(Error.INVENTORY_IS_FULL_P.sendError());
+		if (sndr instanceof Player) {
+			Player player = (Player) sndr;
+			if (args.length == 0) {
+				sndr.sendMessage(Error.NOT_ENOUGH_ARGS.sendError());
 				return true;
 			}
-			if (Plugin.getItem(args[0]) == null) {
-				sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
-				return true;
-			}
-			else {
-				sndr.sendMessage(ChatColor.GRAY + "Adding " + ChatColor.GREEN + "64 " + ChatColor.GRAY + "items of " + ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() + ChatColor.GRAY + " to your inventory.");
-				this.giveItems(args[0], player, 64);
-				return true;
-			}
-		}
-		else if (args.length == 2) {
-			if (Util.hasFullInventory(player)) {
-				sndr.sendMessage(Error.INVENTORY_IS_FULL_P.sendError());
-				return true;
-			}
-			if (!this.isNumber(args[1])) {
-				sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
-				return true;
-			}
-			if (Plugin.getItem(args[0]) == null) {
-				sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
-				return true;
-			}
-			else {
-				int amount = Integer.parseInt(args[1]);
-				sndr.sendMessage(ChatColor.GRAY + "Adding you " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() + ChatColor.GRAY + " to your inventory.");
-				this.giveItems(args[0], player, amount);
-				return true;
-			}
-		}
-		else if (args.length == 3) {
-			if (sndr.hasPermission(Permission.ESS_GIVE_OTHER.getPermission()) || sndr.hasPermission(Permission.ESS_ALL.getPermission()) || sndr.isOp()) {
-				if (!(Bukkit.getPlayer(args[2]) instanceof Player)) {
-					sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
+			if (args.length == 1) {
+				if (Util.hasFullInventory(player)) {
+					sndr.sendMessage(Error.INVENTORY_IS_FULL_P.sendError());
 					return true;
 				}
-				Player target = Bukkit.getPlayer(args[2]);
-				if (Util.hasFullInventory(target)) {
-					sndr.sendMessage(Error.INVENTORY_IS_FULL_PO.sendError());
+				if (Plugin.getItem(args[0]) == null) {
+					sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+					return true;
+				}
+				else {
+					sndr.sendMessage(ChatColor.GRAY + "Adding " + ChatColor.GREEN + "64 " + ChatColor.GRAY + "items of " + ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() + ChatColor.GRAY + " to your inventory.");
+					this.giveItems(args[0], player, 64);
+					return true;
+				}
+			}
+			else if (args.length == 2) {
+				if (Util.hasFullInventory(player)) {
+					sndr.sendMessage(Error.INVENTORY_IS_FULL_P.sendError());
 					return true;
 				}
 				if (!this.isNumber(args[1])) {
@@ -96,28 +70,86 @@ public class GiveCommand extends BukkitCommand {
 				}
 				else {
 					int amount = Integer.parseInt(args[1]);
-					target.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() + ChatColor.GRAY + " to your inventory.");
-					this.giveItems(args[0], target, amount);
+					sndr.sendMessage(ChatColor.GRAY + "Adding you " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() + ChatColor.GRAY + " to your inventory.");
+					this.giveItems(args[0], player, amount);
 					return true;
 				}
 			}
-			else sndr.sendMessage(Error.NO_PERMISSION.sendError()); return true;
-		
-		}
-		else if (args.length >= 4) {
-			sndr.sendMessage(Error.TOO_MANY_ARGS.sendError());
-			return true;
-		} else {
+			else if (args.length == 3) {
+				if (sndr.hasPermission(Permission.ESS_GIVE_OTHER.getPermission()) || sndr.hasPermission(Permission.ESS_ALL.getPermission()) || sndr.isOp()) {
+					if (!(Bukkit.getPlayer(args[2]) instanceof Player)) {
+						sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
+						return true;
+					}
+					Player target = Bukkit.getPlayer(args[2]);
+					if (Util.hasFullInventory(target)) {
+						sndr.sendMessage(Error.INVENTORY_IS_FULL_PO.sendError());
+						return true;
+					}
+					if (!this.isNumber(args[1])) {
+						sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
+						return true;
+					}
+					if (Plugin.getItem(args[0]) == null) {
+						sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+						return true;
+					}
+					else {
+						int amount = Integer.parseInt(args[1]);
+						target.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() + ChatColor.GRAY + " to your inventory.");
+						this.giveItems(args[0], target, amount);
+						return true;
+					}
+				}
+				else sndr.sendMessage(Error.NO_PERMISSION.sendError()); return true;
 			
-			try {
-				throw new UnknownException();
-			} catch (UnknownException e) {
-				e.printStackTrace();
 			}
-			return true;
+			else {
+				sndr.sendMessage(Error.TOO_MANY_ARGS.sendError());
+				return true;
+			}
+		}
+		else {
+			if (args.length <= 2) {
+				sndr.sendMessage(Error.NOT_ENOUGH_ARGS.sendError());
+				return true;
+			}
+			if (args.length == 3) {
+				if (sndr.hasPermission(Permission.ESS_GIVE_OTHER.getPermission()) || sndr.hasPermission(Permission.ESS_ALL.getPermission()) || sndr.isOp()) {
+					if (!(Bukkit.getPlayer(args[2]) instanceof Player)) {
+						sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
+						return true;
+					}
+					Player target = Bukkit.getPlayer(args[2]);
+					if (Util.hasFullInventory(target)) {
+						sndr.sendMessage(Error.INVENTORY_IS_FULL_C.sendError());
+						return true;
+					}
+					if (!this.isNumber(args[1])) {
+						sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
+						return true;
+					}
+					if (Plugin.getItem(args[0]) == null) {
+						sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+						return true;
+					}
+					else {
+						int amount = Integer.parseInt(args[1]);
+						target.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() + ChatColor.GRAY + " to your inventory.");
+						this.giveItems(args[0], target, amount);
+						return true;
+					}
+				}
+				else sndr.sendMessage(Error.NO_PERMISSION.sendError()); return true;
 			
+			}
+			else {
+				sndr.sendMessage(Error.TOO_MANY_ARGS.sendError());
+				return true;
+			}
 		}
 	}
+			
 	public boolean isNumber(String input) {
 		try {
 			Integer.parseInt(input);

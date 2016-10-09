@@ -1,31 +1,47 @@
 package com.njdaeger.essentials;
 
-public class TPS implements Runnable{
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.text.DecimalFormat;
+
+public class TPS {
 	
-	public static int TICK_COUNT = 0;
-	public static long[] TICKS = new long[600];
-	public static long LAST_TICK = 0L;
+	private static final DecimalFormat format = new DecimalFormat("##.##");
+	private static Object server;
+	private static Field tpsField;
 	
-	public static double getTps() {
-		return getTPS(100);
+	public static void getTPSClass() {
+			try {
+				server = Plugin.getNMSClass("MinecraftServer").getMethod("getServer").invoke(null);
+				tpsField = server.getClass().getField("recentTps");
+			} catch (NoSuchFieldException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			}
 	}
+
 	
-	public static double getTPS(int ticks) {
-		if (TICK_COUNT< ticks) {
-			return 20.0D;
+	public static String getTPS() { 
+		int time = 1;
+		double[] tps;
+		try {
+			tps = ((double[]) tpsField.get(server));
+			return format.format(tps[time]);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 		}
-		int target = (TICK_COUNT - 1 - ticks) % TICKS.length;
-		long elapsed = System.currentTimeMillis() - TICKS[target];
-		return ticks / (elapsed / 1000.0D);
+		return null;
+		
 	}
-	public static long getElapsed(int tickID) {
-		if (TICK_COUNT - tickID >= TICKS.length) {
-		}
-		long time = TICKS[(tickID % TICKS.length)];
-		return System.currentTimeMillis() - time;
-	}
-	public void run() {
-		TICKS[(TICK_COUNT % TICKS.length)] = System.currentTimeMillis();
-		TICK_COUNT += 1;
-	}
-}
+} 
