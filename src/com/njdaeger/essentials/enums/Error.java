@@ -131,6 +131,15 @@ public enum Error{
 			return error;
 		}
 		
+	},
+	UNKNOWN_WALK_TYPE {
+
+		@Override
+		public String sendError() {
+			String error = ChatColor.RED + "That walking type is unknown.";
+			return error;
+		}
+		
 	};
 	
 	public abstract String sendError();
