@@ -50,7 +50,7 @@ public class GiveCommand extends BukkitCommand {
 					return true;
 				}
 				else {
-					sndr.sendMessage(ChatColor.GRAY + "Adding " + ChatColor.GREEN + "64 " + ChatColor.GRAY + "items of " + ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() + ChatColor.GRAY + " to your inventory.");
+					sndr.sendMessage(ChatColor.GRAY + "Adding " + ChatColor.GREEN + "64 " + ChatColor.GRAY + "items of " + /*ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() +*/ ChatColor.GRAY + " to your inventory.");
 					this.giveItems(args[0], player, 64);
 					return true;
 				}
@@ -70,7 +70,7 @@ public class GiveCommand extends BukkitCommand {
 				}
 				else {
 					int amount = Integer.parseInt(args[1]);
-					sndr.sendMessage(ChatColor.GRAY + "Adding you " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() + ChatColor.GRAY + " to your inventory.");
+					sndr.sendMessage(ChatColor.GRAY + "Adding you " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).toLowerCase() + ChatColor.GRAY + " to your inventory.");
 					this.giveItems(args[0], player, amount);
 					return true;
 				}
@@ -96,7 +96,7 @@ public class GiveCommand extends BukkitCommand {
 					}
 					else {
 						int amount = Integer.parseInt(args[1]);
-						target.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() + ChatColor.GRAY + " to your inventory.");
+						target.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).toLowerCase()+ ChatColor.GRAY + " to your inventory.");
 						this.giveItems(args[0], target, amount);
 						return true;
 					}
@@ -135,7 +135,7 @@ public class GiveCommand extends BukkitCommand {
 					}
 					else {
 						int amount = Integer.parseInt(args[1]);
-						target.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() + ChatColor.GRAY + " to your inventory.");
+						target.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).toLowerCase() + ChatColor.GRAY + " to your inventory.");
 						this.giveItems(args[0], target, amount);
 						return true;
 					}
@@ -228,7 +228,7 @@ public class GiveCommand extends BukkitCommand {
 		}
 	}
 	@SuppressWarnings("deprecation")
-	public Material getGivenItem(String input) {
+	public String getGivenItem(String input) {
 		if (input.contains(":")) {
 			String splitter[] = input.split(":");
 			if (this.isNumber(splitter[0])) {
@@ -236,14 +236,14 @@ public class GiveCommand extends BukkitCommand {
 					int id = Integer.parseInt(splitter[0]);
 					short damage = Short.parseShort(splitter[1]);
 					Material item = new ItemStack(id, 1, damage).getType();
-					return item;
+					return item.toString();
 				}
 				else return null;	
 			}
 			if (splitter[0].equalsIgnoreCase("minecraft")) {
 				if (Plugin.getItem(splitter[1]) instanceof Material) {
 					Material item = new ItemStack(Plugin.getItem(splitter[0])).getType();
-					return item;
+					return item.toString();
 				}
 				else return null;
 			}
@@ -251,7 +251,7 @@ public class GiveCommand extends BukkitCommand {
 				if (this.isNumber(splitter[1])) {
 					short damage = Short.parseShort(splitter[1]);
 					Material item = new ItemStack(Plugin.getItem(splitter[0]), 1, damage).getType();
-					return item;
+					return item.toString();
 				}
 				else return null;
 			} 
@@ -265,10 +265,10 @@ public class GiveCommand extends BukkitCommand {
 		else {
 			if (this.isNumber(input)) {
 				int id = Integer.parseInt(input);
-				return Material.getMaterial(id);
+				return Material.getMaterial(id).toString();
 			}
 			else {
-				return Material.getMaterial(input);
+				return Material.getMaterial(input).toString();
 			}
 		}
 		return null;
