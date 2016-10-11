@@ -2,6 +2,8 @@ package com.njdaeger.essentials.commands;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -12,11 +14,9 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.njdaeger.essentials.Plugin;
 import com.njdaeger.essentials.Util;
 import com.njdaeger.essentials.enums.Error;
 import com.njdaeger.essentials.enums.Permission;
-import com.njdaeger.essentials.exceptions.UnknownItemException;
 
 public class GiveCommand extends BukkitCommand {
 
@@ -31,78 +31,41 @@ public class GiveCommand extends BukkitCommand {
 		this.setAliases(a);
 		
 	}
-
 	@Override
 	public boolean execute(CommandSender sndr, String label, String[] args) {
 		if (sndr instanceof Player) {
 			Player player = (Player) sndr;
 			if (args.length == 0) {
 				sndr.sendMessage(Error.NOT_ENOUGH_ARGS.sendError());
+				sndr.sendMessage("1");
 				return true;
 			}
 			if (args.length == 1) {
-				if (Util.hasFullInventory(player)) {
-					sndr.sendMessage(Error.INVENTORY_IS_FULL_P.sendError());
-					return true;
-				}
-				if (Plugin.getItem(args[0]) == null) {
-					sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
-					return true;
-				}
-				else {
-					sndr.sendMessage(ChatColor.GRAY + "Adding " + ChatColor.GREEN + "64 " + ChatColor.GRAY + "items of " + /*ChatColor.GREEN + this.getGivenItem(args[0]).name().toLowerCase() +*/ ChatColor.GRAY + " to your inventory.");
-					this.giveItems(args[0], player, 64);
-					return true;
-				}
+				this.give(args[0], player, sndr, 64, Error.INVENTORY_IS_FULL_P);
+				return true;
 			}
-			else if (args.length == 2) {
-				if (Util.hasFullInventory(player)) {
-					sndr.sendMessage(Error.INVENTORY_IS_FULL_P.sendError());
-					return true;
-				}
-				if (!this.isNumber(args[1])) {
+			if (args.length == 2) {
+				if (Util.isNumber(args[1]) == false) {
 					sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
 					return true;
 				}
-				if (Plugin.getItem(args[0]) == null) {
-					sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
-					return true;
-				}
-				else {
-					int amount = Integer.parseInt(args[1]);
-					sndr.sendMessage(ChatColor.GRAY + "Adding you " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).toLowerCase() + ChatColor.GRAY + " to your inventory.");
-					this.giveItems(args[0], player, amount);
-					return true;
-				}
+				int amount = Integer.parseInt(args[1]);
+				this.give(args[0], player, sndr, amount, Error.INVENTORY_IS_FULL_P);
+				return true;
 			}
-			else if (args.length == 3) {
-				if (sndr.hasPermission(Permission.ESS_GIVE_OTHER.getPermission()) || sndr.hasPermission(Permission.ESS_ALL.getPermission()) || sndr.isOp()) {
-					if (!(Bukkit.getPlayer(args[2]) instanceof Player)) {
-						sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
-						return true;
-					}
-					Player target = Bukkit.getPlayer(args[2]);
-					if (Util.hasFullInventory(target)) {
-						sndr.sendMessage(Error.INVENTORY_IS_FULL_PO.sendError());
-						return true;
-					}
-					if (!this.isNumber(args[1])) {
-						sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
-						return true;
-					}
-					if (Plugin.getItem(args[0]) == null) {
-						sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
-						return true;
-					}
-					else {
-						int amount = Integer.parseInt(args[1]);
-						target.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).toLowerCase()+ ChatColor.GRAY + " to your inventory.");
-						this.giveItems(args[0], target, amount);
-						return true;
-					}
+			if (args.length == 3) {
+				Player target = Bukkit.getPlayer(args[2]);
+				if (target == null) {
+					sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
+					return true;
 				}
-				else sndr.sendMessage(Error.NO_PERMISSION.sendError()); return true;
-			
+				if (Util.isNumber(args[1]) == false) {
+					sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
+					return true;
+				}
+				int amount = Integer.parseInt(args[1]);
+				this.give(args[0], target, sndr, amount, Error.INVENTORY_IS_FULL_PO);
+				return true;
 			}
 			else {
 				sndr.sendMessage(Error.TOO_MANY_ARGS.sendError());
@@ -110,38 +73,23 @@ public class GiveCommand extends BukkitCommand {
 			}
 		}
 		else {
-			if (args.length <= 2) {
+			if (args.length < 3) {
 				sndr.sendMessage(Error.NOT_ENOUGH_ARGS.sendError());
 				return true;
 			}
 			if (args.length == 3) {
-				if (sndr.hasPermission(Permission.ESS_GIVE_OTHER.getPermission()) || sndr.hasPermission(Permission.ESS_ALL.getPermission()) || sndr.isOp()) {
-					if (!(Bukkit.getPlayer(args[2]) instanceof Player)) {
-						sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
-						return true;
-					}
-					Player target = Bukkit.getPlayer(args[2]);
-					if (Util.hasFullInventory(target)) {
-						sndr.sendMessage(Error.INVENTORY_IS_FULL_C.sendError());
-						return true;
-					}
-					if (!this.isNumber(args[1])) {
-						sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
-						return true;
-					}
-					if (Plugin.getItem(args[0]) == null) {
-						sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
-						return true;
-					}
-					else {
-						int amount = Integer.parseInt(args[1]);
-						target.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + this.getGivenItem(args[0]).toLowerCase() + ChatColor.GRAY + " to your inventory.");
-						this.giveItems(args[0], target, amount);
-						return true;
-					}
+				Player target = Bukkit.getPlayer(args[2]);
+				if (target == null) {
+					sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
+					return true;
 				}
-				else sndr.sendMessage(Error.NO_PERMISSION.sendError()); return true;
-			
+				if (Util.isNumber(args[1]) == false) {
+					sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
+					return true;
+				}
+				int amount = Integer.parseInt(args[1]);
+				this.give(args[0], target, sndr, amount, Error.INVENTORY_IS_FULL_PO);
+				return true;
 			}
 			else {
 				sndr.sendMessage(Error.TOO_MANY_ARGS.sendError());
@@ -149,128 +97,178 @@ public class GiveCommand extends BukkitCommand {
 			}
 		}
 	}
-			
-	public boolean isNumber(String input) {
-		try {
-			Integer.parseInt(input);
+	@SuppressWarnings("deprecation")
+	public void give(String item, Player player, CommandSender sndr, int amount, Error fullerror) {
+		if (Util.hasFullInventory(player)) {
+			player.sendMessage(fullerror.sendError());
+			return;
+		}
+		if (item.contains(":")) {
+			if (this.contains(item) == true) {
+				sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+				return;
+			}
+			String[] split = item.split(":");
+			if (split[0] == null) {
+				sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+				return;
+			}
+			if (split[1] == null) {
+				sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+				return;
+			}
+			if (Util.isNumber(split[0])) {
+				short damage = Short.parseShort(split[1]);
+				int type = Integer.parseInt(split[0]);
+				if (Material.getMaterial(type) == null) {
+					sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+				}
+				if (Util.isNumber(split[1])) {
+					ItemStack stack = new ItemStack(type, amount, damage);
+					player.getInventory().addItem(stack);
+					sndr.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " now has " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + Material.getMaterial(type).name().toLowerCase());
+					player.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + Material.getMaterial(type).name().toLowerCase());
+					return;
+				}
+				else {
+					sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+					return;
+				}
+			}
+			if (split[0].equalsIgnoreCase("minecraft")) {
+				String mat = split[1].toUpperCase();
+				if (Material.getMaterial(mat) == null) {
+					sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+					return;
+				}
+				else {
+					ItemStack stack = new ItemStack(Material.getMaterial(mat), amount);
+					player.getInventory().addItem(stack);
+					sndr.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " now has " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + Material.getMaterial(mat).name().toLowerCase());
+					player.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + Material.getMaterial(mat).name().toLowerCase());
+					return;
+				}
+			}
+			String mat = split[0].toUpperCase();
+			if (Material.getMaterial(mat) != null) {
+				if (Util.isNumber(split[1])) {
+					short damage = Short.parseShort(split[1]);
+					ItemStack stack = new ItemStack(Material.getMaterial(mat), amount, damage);
+					player.getInventory().addItem(stack);
+					sndr.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " now has " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + Material.getMaterial(mat).name().toLowerCase());
+					player.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + Material.getMaterial(mat).name().toLowerCase());
+					return;
+				}
+				else {
+					sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+					return;
+				}
+			}
+			else {
+				sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+				return;
+			}
+		}
+		else {
+			if (Util.isNumber(item)) {
+				int type = Integer.parseInt(item);
+				if (Material.getMaterial(type) == null) {
+					sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+					return;
+				}
+				else {
+					ItemStack stack = new ItemStack(type, amount);
+					player.getInventory().addItem(stack);
+					sndr.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " now has " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + Material.getMaterial(type).name().toLowerCase());
+					player.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + Material.getMaterial(type).name().toLowerCase());
+					return;
+				}
+			}
+			else {
+				String mat = item.toUpperCase();
+				if (Material.getMaterial(mat) == null) {
+					sndr.sendMessage(Error.UNKNOWN_ITEM.sendError());
+					return;
+				}
+				else {
+					ItemStack stack = new ItemStack(Material.getMaterial(mat), amount);
+					player.getInventory().addItem(stack);
+					sndr.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " now has " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + Material.getMaterial(mat).name().toLowerCase());
+					player.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + Material.getMaterial(mat).name().toLowerCase());
+					return;
+				}
+			}
+		}
+	}
+	@SuppressWarnings("deprecation")
+	public String getName(String item, Player target) {
+		if (Util.hasFullInventory(target)) {
+			return null;
+		}
+		if (item.contains(":")) {
+			if (this.contains(item) == true) {
+				return null;
+			}
+			String[] split = item.split(":");
+			if (split[0] == null) {
+				return null;
+			}
+			if (split[1] == null) {
+				return null;
+			}
+			if (Util.isNumber(split[0])) {
+				int type = Integer.parseInt(split[0]);
+				if (Material.getMaterial(type) == null) {
+					return null;
+				}
+				if (Util.isNumber(split[1])) {
+					return Material.getMaterial(type).name().toLowerCase();
+				}
+				else return null;
+			}
+			if (split[0].equalsIgnoreCase("minecraft")) {
+				String mat = split[1].toUpperCase();
+				if (Material.getMaterial(mat) == null) {
+					return null;
+				}
+				else return Material.getMaterial(mat).name().toLowerCase();
+			}
+			String mat = split[0].toUpperCase();
+			if (Material.getMaterial(mat) != null) {
+				if (Util.isNumber(split[1])) {
+					return Material.getMaterial(mat).name().toLowerCase();
+				}
+				else return null;
+			}
+			else return null;
+		}
+		else {
+			if (Util.isNumber(item)) {
+				int type = Integer.parseInt(item);
+				if (Material.getMaterial(type) == null) {
+					return null;
+				}
+				else return Material.getMaterial(type).name().toLowerCase();
+			}
+			else {
+				String mat = item.toUpperCase();
+				if (Material.getMaterial(mat) == null) {
+					return null;
+				}
+				else return Material.getMaterial(mat).name().toLowerCase();
+			}
+		}
+	}
+	public boolean contains(String input) {
+		Pattern pattern = Pattern.compile("[:]");
+		Matcher matcher = pattern.matcher(input);
+		int count = 0;
+		while (matcher.find()) {
+			count++;
+		}
+		if (count > 1) {
 			return true;
 		}
-		catch (NumberFormatException e) {
-			return false;
-		}
-	}
-	@SuppressWarnings("deprecation")
-	public void giveItems(String items, Player player, int amount) {
-		if (items.contains(":")) {
-			String[] splitter = items.split(":");
-			if (splitter[1] == null) {
-				player.sendMessage(Error.UNKNOWN_ITEM.sendError());
-				return;
-			}
-			if (isNumber(splitter[0])) {
-				if (isNumber(splitter[1])) {
-					int id = 0;
-					short damage = 0;
-					damage = Short.parseShort(splitter[1]);
-					id = Integer.parseInt(splitter[0]);
-					player.getInventory().addItem(new ItemStack(id, amount, damage));
-				}
-				else {
-					player.sendMessage(Error.UNKNOWN_ITEM.sendError());
-					return;
-				}
-				
-			}
-			if (splitter[0].equalsIgnoreCase("minecraft")) {
-				if (Plugin.getItem(splitter[1]) instanceof Material) {
-					player.getInventory().addItem(new ItemStack(Plugin.getItem(splitter[1]), amount));
-					return;
-				}
-				else player.sendMessage(Error.UNKNOWN_ITEM.sendError());
-				return;
-			}
-			if (Plugin.getItem(splitter[0]) instanceof Material) {
-				short damage = 0;
-				damage = Short.parseShort(splitter[1]);
-				player.getInventory().addItem(new ItemStack(Plugin.getItem(splitter[0]), amount, damage));
-				return;
-			}
-			else {
-				try {
-					player.sendMessage(Error.UNKNOWN_ITEM.sendError());
-					throw new UnknownItemException();
-				} catch (UnknownItemException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		else {
-			if (isNumber(items) == true) {
-				int id = 0;
-				id = Integer.parseInt(items);
-				player.getInventory().addItem(new ItemStack(id, amount));
-				return;
-			}
-			else {
-				if (Plugin.getItem(items) != null) {
-					player.getInventory().addItem(new ItemStack(Plugin.getItem(items), amount));
-					return;
-				}
-				else {
-					try {
-						player.sendMessage(Error.UNKNOWN_ITEM.sendError());
-						throw new UnknownItemException();
-					} catch (UnknownItemException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-	}
-	@SuppressWarnings("deprecation")
-	public String getGivenItem(String input) {
-		if (input.contains(":")) {
-			String splitter[] = input.split(":");
-			if (this.isNumber(splitter[0])) {
-				if (this.isNumber(splitter[1])) {
-					int id = Integer.parseInt(splitter[0]);
-					short damage = Short.parseShort(splitter[1]);
-					Material item = new ItemStack(id, 1, damage).getType();
-					return item.toString();
-				}
-				else return null;	
-			}
-			if (splitter[0].equalsIgnoreCase("minecraft")) {
-				if (Plugin.getItem(splitter[1]) instanceof Material) {
-					Material item = new ItemStack(Plugin.getItem(splitter[0])).getType();
-					return item.toString();
-				}
-				else return null;
-			}
-			if (Plugin.getItem(splitter[0]) instanceof Material) {
-				if (this.isNumber(splitter[1])) {
-					short damage = Short.parseShort(splitter[1]);
-					Material item = new ItemStack(Plugin.getItem(splitter[0]), 1, damage).getType();
-					return item.toString();
-				}
-				else return null;
-			} 
-			else try {
-				throw new UnknownItemException();
-			} 
-			catch (UnknownItemException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			if (this.isNumber(input)) {
-				int id = Integer.parseInt(input);
-				return Material.getMaterial(id).toString();
-			}
-			else {
-				return Material.getMaterial(input).toString();
-			}
-		}
-		return null;
+		else return false;
 	}
 }
