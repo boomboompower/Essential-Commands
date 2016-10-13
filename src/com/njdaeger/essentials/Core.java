@@ -8,7 +8,9 @@ import com.njdaeger.essentials.commands.AfkCommand;
 import com.njdaeger.essentials.commands.BreakCommand;
 import com.njdaeger.essentials.commands.BroadcastCommand;
 import com.njdaeger.essentials.commands.BurnCommand;
+import com.njdaeger.essentials.commands.ClearInvCommand;
 import com.njdaeger.essentials.commands.GamemodeCommand;
+import com.njdaeger.essentials.commands.GetPositionCommand;
 import com.njdaeger.essentials.commands.GiveCommand;
 import com.njdaeger.essentials.commands.GodCommand;
 import com.njdaeger.essentials.commands.NickCommand;
@@ -35,7 +37,9 @@ public class Core extends JavaPlugin{
 		Plugin.getCommand("nick", new NickCommand()); //Finished
 		Plugin.getCommand("break", new BreakCommand()); //Finished
 		Plugin.getCommand("burn", new BurnCommand()); //Finished
-		Plugin.getCommand("speed", new SpeedCommand()); //Testing
+		Plugin.getCommand("speed", new SpeedCommand()); //Finished
+		Plugin.getCommand("clear", new ClearInvCommand()); //Finished
+		Plugin.getCommand("position", new GetPositionCommand()); //Finished
 		
 	}
 	public void registerPermissions() {

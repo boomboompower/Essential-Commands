@@ -64,6 +64,10 @@ public class SpeedCommand extends BukkitCommand {
 							sndr.sendMessage(Error.INPUT_TOO_LARGE.sendError());
 							return true;
 						}
+						if (x < 0) {
+							sndr.sendMessage(Error.INPUT_TOO_SMALL.sendError());
+							return true;
+						}
 						else {
 							double e = ((19 * x) - Math.pow(x, 2)) / 90;
 							String a = Double.toString(e);
@@ -79,6 +83,10 @@ public class SpeedCommand extends BukkitCommand {
 							sndr.sendMessage(Error.INPUT_TOO_LARGE.sendError());
 							return true;
 						}
+						if (x < 0) {
+							sndr.sendMessage(Error.INPUT_TOO_SMALL.sendError());
+							return true;
+						}
 						float fspeed = Float.parseFloat(args[0]) / 10;
 						player.setFlySpeed(fspeed);
 						sndr.sendMessage(ChatColor.GRAY + "Your flying speed is now " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
@@ -87,107 +95,131 @@ public class SpeedCommand extends BukkitCommand {
 				}
 			}
 			if (args.length == 2) {
-				Player target = Bukkit.getPlayer(args[1]);
-				if (target == null) {
-					sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
-					return true;
-				}
-				if (args[0].equalsIgnoreCase("reset")) {
-					if (!target.isFlying()) {
-						target.setWalkSpeed(0.2f);
-						sndr.sendMessage(ChatColor.GRAY + "You reset " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s walk speed.");
-						target.sendMessage(ChatColor.GRAY + "Your walking speed is now reset.");
+				if (sndr.hasPermission(Permission.ESS_SPEED_OTHER.getPermission()) || 
+						sndr.hasPermission(Permission.ESS_ALL.getPermission()) || 
+						sndr.isOp()) {
+					Player target = Bukkit.getPlayer(args[1]);
+					if (target == null) {
+						sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
+						return true;
+					}
+					if (args[0].equalsIgnoreCase("reset")) {
+						if (!target.isFlying()) {
+							target.setWalkSpeed(0.2f);
+							sndr.sendMessage(ChatColor.GRAY + "You reset " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s walk speed.");
+							target.sendMessage(ChatColor.GRAY + "Your walking speed is now reset.");
+							return true;
+						}
+						else {
+							target.setFlySpeed(0.1f);
+							sndr.sendMessage(ChatColor.GRAY + "You reset " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s flying speed.");
+							target.sendMessage(ChatColor.GRAY + "Your flying speed is now reset.");
+							return true;
+						}
+					}
+					if (Util.isNumber(args[0]) == false) {
+						sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
+						return true;
+					}
+					double x = Double.parseDouble(args[0]);
+					if (x > 10) {
+						sndr.sendMessage(Error.INPUT_TOO_LARGE.sendError());
+						return true;
+					}
+					if (x < 0) {
+						sndr.sendMessage(Error.INPUT_TOO_SMALL.sendError());
 						return true;
 					}
 					else {
-						target.setFlySpeed(0.1f);
-						sndr.sendMessage(ChatColor.GRAY + "You reset " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s flying speed.");
-						target.sendMessage(ChatColor.GRAY + "Your flying speed is now reset.");
-						return true;
+						if (!target.isFlying()) {
+							double e = ((19 * x) - Math.pow(x, 2)) / 90;
+							String a = Double.toString(e);
+							float speed = Float.parseFloat(a);
+							target.setWalkSpeed(speed);
+							sndr.sendMessage(ChatColor.GRAY + "You set " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s walking speed to " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
+							target.sendMessage(ChatColor.GRAY + "Your walking speed is now " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
+							return true;
+						}
+						else {
+							float fspeed = Float.parseFloat(args[0]) / 10;
+							target.setFlySpeed(fspeed);
+							sndr.sendMessage(ChatColor.GRAY + "You set " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s flying speed to " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
+							target.sendMessage(ChatColor.GRAY + "Your flying speed is now " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
+							return true;
+						}
 					}
-				}
-				if (Util.isNumber(args[0]) == false) {
-					sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
-					return true;
-				}
-				double x = Double.parseDouble(args[0]);
-				if (x > 10) {
-					sndr.sendMessage(Error.INPUT_TOO_LARGE.sendError());
-					return true;
 				}
 				else {
-					if (!target.isFlying()) {
-						double e = ((19 * x) - Math.pow(x, 2)) / 90;
-						String a = Double.toString(e);
-						float speed = Float.parseFloat(a);
-						target.setWalkSpeed(speed);
-						sndr.sendMessage(ChatColor.GRAY + "You set " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s walking speed to " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
-						target.sendMessage(ChatColor.GRAY + "Your walking speed is now " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
-						return true;
-					}
-					else {
-						float fspeed = Float.parseFloat(args[0]) / 10;
-						target.setFlySpeed(fspeed);
-						sndr.sendMessage(ChatColor.GRAY + "You set " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s flying speed to " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
-						target.sendMessage(ChatColor.GRAY + "Your flying speed is now " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
-						return true;
-					}
+					sndr.sendMessage(Error.NO_PERMISSION.sendError());
+					return true;
 				}
 			}
 			if (args.length == 3) {
-				Player target = Bukkit.getPlayer(args[1]);
-				if (target == null) {
-					sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
-					return true;
-				}
-				if (args[0].equalsIgnoreCase("reset")) {
-					if (args[2].equalsIgnoreCase("fly") || args[2].equalsIgnoreCase("flying")) {
-						target.setFlySpeed(0.1f);
-						sndr.sendMessage(ChatColor.GRAY + "You reset " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s flying speed.");
-						target.sendMessage(ChatColor.GRAY + "Your flying speed is now reset.");
+				if (sndr.hasPermission(Permission.ESS_SPEED_OTHER.getPermission()) || 
+						sndr.hasPermission(Permission.ESS_ALL.getPermission()) || 
+						sndr.isOp()) {
+					Player target = Bukkit.getPlayer(args[1]);
+					if (target == null) {
+						sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
 						return true;
 					}
-					if (args[2].equalsIgnoreCase("walk") || args[2].equalsIgnoreCase("walking")) {
-						target.setWalkSpeed(0.2f);
-						sndr.sendMessage(ChatColor.GRAY + "You reset " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s walk speed.");
-						target.sendMessage(ChatColor.GRAY + "Your walking speed is now reset.");
+					if (args[0].equalsIgnoreCase("reset")) {
+						if (args[2].equalsIgnoreCase("fly") || args[2].equalsIgnoreCase("flying")) {
+							target.setFlySpeed(0.1f);
+							sndr.sendMessage(ChatColor.GRAY + "You reset " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s flying speed.");
+							target.sendMessage(ChatColor.GRAY + "Your flying speed is now reset.");
+							return true;
+						}
+						if (args[2].equalsIgnoreCase("walk") || args[2].equalsIgnoreCase("walking")) {
+							target.setWalkSpeed(0.2f);
+							sndr.sendMessage(ChatColor.GRAY + "You reset " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s walk speed.");
+							target.sendMessage(ChatColor.GRAY + "Your walking speed is now reset.");
+							return true;
+						}
+						else {
+							sndr.sendMessage(Error.UNKNOWN_WALK_TYPE.sendError());
+							return true;
+						}
+					}
+					if (Util.isNumber(args[0]) == false) {
+						sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
+						return true;
+					}
+					double x = Double.parseDouble(args[0]);
+					if (x > 10) {
+						sndr.sendMessage(Error.INPUT_TOO_LARGE.sendError());
+						return true;
+					}
+					if (x < 0) {
+						sndr.sendMessage(Error.INPUT_TOO_SMALL.sendError());
 						return true;
 					}
 					else {
-						sndr.sendMessage(Error.UNKNOWN_WALK_TYPE.sendError());
-						return true;
+						if (args[2].equalsIgnoreCase("fly") || args[2].equalsIgnoreCase("flying")) {
+							float fspeed = Float.parseFloat(args[0]) / 10;
+							target.setFlySpeed(fspeed);
+							sndr.sendMessage(ChatColor.GRAY + "You set " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s flying speed to " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
+							target.sendMessage(ChatColor.GRAY + "Your flying speed is now " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
+							return true;
+						}
+						if (args[2].equalsIgnoreCase("walk") || args[2].equalsIgnoreCase("walking")) {
+							double e = ((19 * x) - Math.pow(x, 2)) / 90;
+							String a = Double.toString(e);
+							float speed = Float.parseFloat(a);
+							target.setWalkSpeed(speed);
+							sndr.sendMessage(ChatColor.GRAY + "You set " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s walking speed to " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
+							target.sendMessage(ChatColor.GRAY + "Your walking speed is now " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
+							return true;
+						}
+						else {
+							sndr.sendMessage(Error.UNKNOWN_WALK_TYPE.sendError());
+							return true;
+						}
 					}
-				}
-				if (Util.isNumber(args[0]) == false) {
-					sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
-					return true;
-				}
-				double x = Double.parseDouble(args[0]);
-				if (x > 10) {
-					sndr.sendMessage(Error.INPUT_TOO_LARGE.sendError());
-					return true;
 				}
 				else {
-					if (args[2].equalsIgnoreCase("fly") || args[2].equalsIgnoreCase("flying")) {
-						float fspeed = Float.parseFloat(args[0]) / 10;
-						target.setFlySpeed(fspeed);
-						sndr.sendMessage(ChatColor.GRAY + "You set " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s flying speed to " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
-						target.sendMessage(ChatColor.GRAY + "Your flying speed is now " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
-						return true;
-					}
-					if (args[2].equalsIgnoreCase("walk") || args[2].equalsIgnoreCase("walking")) {
-						double e = ((19 * x) - Math.pow(x, 2)) / 90;
-						String a = Double.toString(e);
-						float speed = Float.parseFloat(a);
-						target.setWalkSpeed(speed);
-						sndr.sendMessage(ChatColor.GRAY + "You set " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s walking speed to " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
-						target.sendMessage(ChatColor.GRAY + "Your walking speed is now " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
-						return true;
-					}
-					else {
-						sndr.sendMessage(Error.UNKNOWN_WALK_TYPE.sendError());
-						return true;
-					}
+					sndr.sendMessage(Error.NO_PERMISSION.sendError());
+					return true;
 				}
 			}
 			else {
@@ -229,6 +261,10 @@ public class SpeedCommand extends BukkitCommand {
 					sndr.sendMessage(Error.INPUT_TOO_LARGE.sendError());
 					return true;
 				}
+				if (x < 0) {
+					sndr.sendMessage(Error.INPUT_TOO_SMALL.sendError());
+					return true;
+				}
 				else {
 					if (!target.isFlying()) {
 						double e = ((19 * x) - Math.pow(x, 2)) / 90;
@@ -279,6 +315,10 @@ public class SpeedCommand extends BukkitCommand {
 				double x = Double.parseDouble(args[0]);
 				if (x > 10) {
 					sndr.sendMessage(Error.INPUT_TOO_LARGE.sendError());
+					return true;
+				}
+				if (x < 0) {
+					sndr.sendMessage(Error.INPUT_TOO_SMALL.sendError());
 					return true;
 				}
 				else {

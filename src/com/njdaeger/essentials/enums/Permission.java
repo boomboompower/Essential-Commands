@@ -12,7 +12,7 @@ public enum Permission {
 		}
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.*");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_ALL.getPermission());
 			return permission;
 		}
 		
@@ -30,7 +30,7 @@ public enum Permission {
 		}
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.afk");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_AFK.getPermission());
 			return permission;
 		}
 	},
@@ -47,7 +47,7 @@ public enum Permission {
 		}
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.afk.other");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_AFK_OTHER.getPermission());
 			return permission;
 		}
 	},
@@ -64,7 +64,7 @@ public enum Permission {
 		}
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.back");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_BACK.getPermission());
 			return permission;
 		}
 	},
@@ -83,7 +83,7 @@ public enum Permission {
 
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.ban");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_BAN.getPermission());
 			return permission;
 		}
 		
@@ -101,7 +101,7 @@ public enum Permission {
 		}
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.break");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_BREAK.getPermission());
 			return permission;
 		}
 	},
@@ -115,7 +115,7 @@ public enum Permission {
 
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.broadcast");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_BROADCAST.getPermission());
 			return permission;
 		}
 	},
@@ -129,7 +129,7 @@ public enum Permission {
 
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.burn");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_BURN.getPermission());
 			return permission;
 		}
 		@Override 
@@ -149,12 +149,52 @@ public enum Permission {
 
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.burn.other");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_BURN_OTHER.getPermission());
 			return permission;
 		}
 		@Override 
 		public String getCommand() {
 			String command = "/burn";
+			return command;
+		}
+		
+	},
+	ESS_CLEAR {
+
+		@Override
+		public String getPermission() {
+			String permission = "essentials.clear";
+			return permission;
+		}
+
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_CLEAR.getPermission());
+			return permission;
+		}
+		@Override 
+		public String getCommand() {
+			String command = "/clear";
+			return command;
+		}
+		
+	},
+	ESS_CLEAR_OTHER {
+
+		@Override
+		public String getPermission() {
+			String permission = "essentials.clear.other";
+			return permission;
+		}
+
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_CLEAR_OTHER.getPermission());
+			return permission;
+		}
+		@Override 
+		public String getCommand() {
+			String command = "/clear";
 			return command;
 		}
 		
@@ -169,7 +209,7 @@ public enum Permission {
 
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.chatcolor");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_CHATCOLOR.getPermission());
 			return permission;
 		}
 		
@@ -187,7 +227,7 @@ public enum Permission {
 		}
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.fly");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_FLY.getPermission());
 			return permission;
 		}
 	},
@@ -205,7 +245,7 @@ public enum Permission {
 		}
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.fly.other");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_FLY_OTHER.getPermission());
 			return permission;
 		}
 	},
@@ -222,7 +262,7 @@ public enum Permission {
 		}
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.gamemode");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_GAMEMODE.getPermission());
 			return permission;
 		}
 	},
@@ -239,7 +279,7 @@ public enum Permission {
 		}
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.gamemode.other");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_GAMEMODE_OTHER.getPermission());
 			return permission;
 		}
 	},
@@ -258,7 +298,7 @@ public enum Permission {
 
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.give");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_GIVE.getPermission());
 			return permission;
 		}
 		
@@ -278,7 +318,7 @@ public enum Permission {
 
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.give.other");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_GIVE_OTHER.getPermission());
 			return permission;
 		}
 		
@@ -293,7 +333,7 @@ public enum Permission {
 	
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.god");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_GOD.getPermission());
 			return permission;
 		}
 		@Override
@@ -302,7 +342,8 @@ public enum Permission {
 			return command;
 		}
 		
-	}, ESS_GOD_OTHER{
+	}, 
+	ESS_GOD_OTHER{
 	
 		@Override
 		public String getPermission() {
@@ -312,7 +353,7 @@ public enum Permission {
 	
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.god.other");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_GOD_OTHER.getPermission());
 			return permission;
 		}
 		@Override
@@ -321,7 +362,8 @@ public enum Permission {
 			return command;
 		}
 		
-	}, ESS_NICK{
+	}, 
+	ESS_NICK{
 	
 		@Override
 		public String getPermission() {
@@ -331,7 +373,7 @@ public enum Permission {
 	
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.nick");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_NICK.getPermission());
 			return permission;
 		}
 		@Override
@@ -340,7 +382,8 @@ public enum Permission {
 			return command;
 		}
 	
-	}, ESS_NICK_OTHER{
+	}, 
+	ESS_NICK_OTHER{
 	
 		@Override
 		public String getPermission() {
@@ -350,7 +393,7 @@ public enum Permission {
 	
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.nick.other");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_NICK_OTHER.getPermission());
 			return permission;
 		}
 		@Override
@@ -359,7 +402,46 @@ public enum Permission {
 			return command;
 		}
 		
-	}, ESS_SERVER_INFO {
+	},
+	ESS_POSITION {
+		@Override 
+		public String getCommand() {
+			String command = "/position";
+			return command;
+		}
+		
+		@Override
+		public String getPermission() {
+			String permission = "essentials.position";
+			return permission;
+		}
+
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_POSITION.getPermission());
+			return permission;
+		}
+	},
+	ESS_POSITION_OTHER {
+		@Override 
+		public String getCommand() {
+			String command = "/position";
+			return command;
+		}
+		
+		@Override
+		public String getPermission() {
+			String permission = "essentials.position.other";
+			return permission;
+		}
+
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_POSITION_OTHER.getPermission());
+			return permission;
+		}
+	},
+	ESS_SERVER_INFO {
 		
 		@Override 
 		public String getCommand() {
@@ -375,7 +457,7 @@ public enum Permission {
 
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.serverinfo");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_SERVER_INFO.getPermission());
 			return permission;
 		}
 		
@@ -393,7 +475,7 @@ public enum Permission {
 		}
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.speed");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_SPEED.getPermission());
 			return permission;
 		}
 	},
@@ -411,7 +493,7 @@ public enum Permission {
 		}
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission("essentials.speed.other");
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_SPEED_OTHER.getPermission());
 			return permission;
 		}
 	};

@@ -51,7 +51,7 @@ public class AfkCommand extends BukkitCommand{
 			}
 		}
 		if (args.length == 1) {
-			if((sndr.hasPermission(Permission.ESS_AFK.getPermission()) && sndr.hasPermission(Permission.ESS_AFK_OTHER.getPermission())) || 
+			if(sndr.hasPermission(Permission.ESS_AFK_OTHER.getPermission()) || 
 					sndr.hasPermission(Permission.ESS_ALL.getPermission()) || sndr.isOp()) {
 				if (Bukkit.getPlayer(args[0]) == null) {
 					sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
@@ -79,14 +79,3 @@ public class AfkCommand extends BukkitCommand{
 		}
 	}	
 }
-/*
-	 * time to start setting up the rest of the command and variables. 
-	 * 1. have a check to see if the player sends a command it un afk's them
-	 * 2. generate a player config file and test if it works
-	 * 3. do a mile run tomorrow on the track to see what i can do.
-	 * 4. add more commands
-	 * 5. make errortype enum complete ish
-	 * 6. remove some of the exceptions.
-	 * 7. make the new file file in the configuration api
-	 * 
-	 */

@@ -37,7 +37,6 @@ public class GiveCommand extends BukkitCommand {
 			Player player = (Player) sndr;
 			if (args.length == 0) {
 				sndr.sendMessage(Error.NOT_ENOUGH_ARGS.sendError());
-				sndr.sendMessage("1");
 				return true;
 			}
 			if (args.length == 1) {
@@ -54,18 +53,25 @@ public class GiveCommand extends BukkitCommand {
 				return true;
 			}
 			if (args.length == 3) {
-				Player target = Bukkit.getPlayer(args[2]);
-				if (target == null) {
-					sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
+				if (sndr.hasPermission(Permission.ESS_ALL.getPermission()) || sndr.hasPermission(Permission.ESS_GIVE_OTHER.getPermission()) || sndr.isOp()) {
+					Player target = Bukkit.getPlayer(args[2]);
+					if (target == null) {
+						sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
+						return true;
+					}
+					
+					if (Util.isNumber(args[1]) == false) {
+						sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
+						return true;
+					}
+					int amount = Integer.parseInt(args[1]);
+					this.give(args[0], target, sndr, amount, Error.INVENTORY_IS_FULL_PO);
 					return true;
 				}
-				if (Util.isNumber(args[1]) == false) {
-					sndr.sendMessage(Error.INPUT_NOT_NUM.sendError());
+				else {
+					sndr.sendMessage(Error.NO_PERMISSION.sendError());
 					return true;
 				}
-				int amount = Integer.parseInt(args[1]);
-				this.give(args[0], target, sndr, amount, Error.INVENTORY_IS_FULL_PO);
-				return true;
 			}
 			else {
 				sndr.sendMessage(Error.TOO_MANY_ARGS.sendError());
@@ -197,65 +203,6 @@ public class GiveCommand extends BukkitCommand {
 					player.sendMessage(ChatColor.GREEN + sndr.getName() + ChatColor.GRAY + " added " + ChatColor.GREEN + amount + ChatColor.GRAY + " items of " + ChatColor.GREEN + Material.getMaterial(mat).name().toLowerCase());
 					return;
 				}
-			}
-		}
-	}
-	@SuppressWarnings("deprecation")
-	public String getName(String item, Player target) {
-		if (Util.hasFullInventory(target)) {
-			return null;
-		}
-		if (item.contains(":")) {
-			if (this.contains(item) == true) {
-				return null;
-			}
-			String[] split = item.split(":");
-			if (split[0] == null) {
-				return null;
-			}
-			if (split[1] == null) {
-				return null;
-			}
-			if (Util.isNumber(split[0])) {
-				int type = Integer.parseInt(split[0]);
-				if (Material.getMaterial(type) == null) {
-					return null;
-				}
-				if (Util.isNumber(split[1])) {
-					return Material.getMaterial(type).name().toLowerCase();
-				}
-				else return null;
-			}
-			if (split[0].equalsIgnoreCase("minecraft")) {
-				String mat = split[1].toUpperCase();
-				if (Material.getMaterial(mat) == null) {
-					return null;
-				}
-				else return Material.getMaterial(mat).name().toLowerCase();
-			}
-			String mat = split[0].toUpperCase();
-			if (Material.getMaterial(mat) != null) {
-				if (Util.isNumber(split[1])) {
-					return Material.getMaterial(mat).name().toLowerCase();
-				}
-				else return null;
-			}
-			else return null;
-		}
-		else {
-			if (Util.isNumber(item)) {
-				int type = Integer.parseInt(item);
-				if (Material.getMaterial(type) == null) {
-					return null;
-				}
-				else return Material.getMaterial(type).name().toLowerCase();
-			}
-			else {
-				String mat = item.toUpperCase();
-				if (Material.getMaterial(mat) == null) {
-					return null;
-				}
-				else return Material.getMaterial(mat).name().toLowerCase();
 			}
 		}
 	}

@@ -140,6 +140,13 @@ public enum Error{
 			return error;
 		}
 		
+	},
+	INPUT_TOO_SMALL {
+		@Override
+		public String sendError() {
+			String error = ChatColor.RED + "The input used is too small.";
+			return error;
+		}
 	};
 	
 	public abstract String sendError();
