@@ -1,0 +1,5 @@
+Notes:
+
+How to create a temp ban command. 
+get the current time. and get the time they are temp banned. 
+check if the old current time equals that plus the time banned
