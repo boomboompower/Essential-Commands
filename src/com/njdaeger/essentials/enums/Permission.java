@@ -362,7 +362,44 @@ public enum Permission {
 			return command;
 		}
 		
-	}, 
+	},
+	ESS_HEAL {
+
+		@Override
+		public String getPermission() {
+			String permission = "essentials.heal";
+			return permission;
+		}
+	
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_GOD_OTHER.getPermission());
+			return permission;
+		}
+		@Override
+		public String getCommand() {
+			String command = "/heal";
+			return command;
+		}
+	},
+	ESS_HEAL_OTHER {
+		@Override
+		public String getPermission() {
+			String permission = "essentials.heal.other";
+			return permission;
+		}
+	
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_GOD_OTHER.getPermission());
+			return permission;
+		}
+		@Override
+		public String getCommand() {
+			String command = "/heal";
+			return command;
+		}
+	},
 	ESS_NICK{
 	
 		@Override

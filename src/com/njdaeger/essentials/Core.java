@@ -13,6 +13,7 @@ import com.njdaeger.essentials.commands.GamemodeCommand;
 import com.njdaeger.essentials.commands.GetPositionCommand;
 import com.njdaeger.essentials.commands.GiveCommand;
 import com.njdaeger.essentials.commands.GodCommand;
+import com.njdaeger.essentials.commands.HealCommand;
 import com.njdaeger.essentials.commands.NickCommand;
 import com.njdaeger.essentials.commands.ServerInfoCommand;
 import com.njdaeger.essentials.commands.SpeedCommand;
@@ -40,6 +41,7 @@ public class Core extends JavaPlugin{
 		Plugin.getCommand("speed", new SpeedCommand()); //Finished
 		Plugin.getCommand("clear", new ClearInvCommand()); //Finished
 		Plugin.getCommand("position", new GetPositionCommand()); //Finished
+		Plugin.getCommand("heal", new HealCommand()); //Testing
 		
 	}
 	public void registerPermissions() {
