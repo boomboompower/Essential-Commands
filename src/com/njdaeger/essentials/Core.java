@@ -4,19 +4,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.chat.chatcolor.ChatHandler;
-import com.njdaeger.essentials.commands.AfkCommand;
-import com.njdaeger.essentials.commands.BreakCommand;
-import com.njdaeger.essentials.commands.BroadcastCommand;
-import com.njdaeger.essentials.commands.BurnCommand;
-import com.njdaeger.essentials.commands.ClearInvCommand;
-import com.njdaeger.essentials.commands.GamemodeCommand;
-import com.njdaeger.essentials.commands.GetPositionCommand;
-import com.njdaeger.essentials.commands.GiveCommand;
-import com.njdaeger.essentials.commands.GodCommand;
-import com.njdaeger.essentials.commands.HealCommand;
-import com.njdaeger.essentials.commands.NickCommand;
-import com.njdaeger.essentials.commands.ServerInfoCommand;
-import com.njdaeger.essentials.commands.SpeedCommand;
+import com.njdaeger.essentials.commands.messaging.BroadcastCommand;
+import com.njdaeger.essentials.commands.messaging.MeCommand;
+import com.njdaeger.essentials.commands.messaging.MessageCommand;
+import com.njdaeger.essentials.commands.player.AfkCommand;
+import com.njdaeger.essentials.commands.player.BreakCommand;
+import com.njdaeger.essentials.commands.player.BurnCommand;
+import com.njdaeger.essentials.commands.player.ClearInvCommand;
+import com.njdaeger.essentials.commands.player.GamemodeCommand;
+import com.njdaeger.essentials.commands.player.GetPositionCommand;
+import com.njdaeger.essentials.commands.player.GiveCommand;
+import com.njdaeger.essentials.commands.player.GodCommand;
+import com.njdaeger.essentials.commands.player.HealCommand;
+import com.njdaeger.essentials.commands.player.NickCommand;
+import com.njdaeger.essentials.commands.player.SpeedCommand;
+import com.njdaeger.essentials.commands.world.ServerInfoCommand;
 import com.njdaeger.essentials.listeners.AfkListener;
 
 public class Core extends JavaPlugin{
@@ -41,7 +43,9 @@ public class Core extends JavaPlugin{
 		Plugin.getCommand("speed", new SpeedCommand()); //Finished
 		Plugin.getCommand("clear", new ClearInvCommand()); //Finished
 		Plugin.getCommand("position", new GetPositionCommand()); //Finished
-		Plugin.getCommand("heal", new HealCommand()); //Testing
+		Plugin.getCommand("heal", new HealCommand()); //Finished
+		Plugin.getCommand("me", new MeCommand()); //Finished
+		Plugin.getCommand("message", new MessageCommand()); //Early dev.
 		
 	}
 	public void registerPermissions() {

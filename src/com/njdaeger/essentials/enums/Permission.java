@@ -373,7 +373,7 @@ public enum Permission {
 	
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_GOD_OTHER.getPermission());
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_HEAL.getPermission());
 			return permission;
 		}
 		@Override
@@ -391,12 +391,87 @@ public enum Permission {
 	
 		@Override
 		public org.bukkit.permissions.Permission registerPermission() {
-			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_GOD_OTHER.getPermission());
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_HEAL_OTHER.getPermission());
 			return permission;
 		}
 		@Override
 		public String getCommand() {
 			String command = "/heal";
+			return command;
+		}
+	},
+	ESS_ME {
+
+		@Override
+		public String getPermission() {
+			String permission = "essentials.me";
+			return permission;
+		}
+	
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_ME.getPermission());
+			return permission;
+		}
+		@Override
+		public String getCommand() {
+			String command = "/me";
+			return command;
+		}
+		
+	},
+	ESS_ME_CHATCOLOR {
+
+		@Override
+		public String getPermission() {
+			String permission = "essentials.me.chatcolor";
+			return permission;
+		}
+	
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_ME_CHATCOLOR.getPermission());
+			return permission;
+		}
+		@Override
+		public String getCommand() {
+			String command = "/me";
+			return command;
+		}
+	},
+	ESS_MESSAGE {
+		@Override
+		public String getPermission() {
+			String permission = "essentials.message";
+			return permission;
+		}
+	
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_MESSAGE.getPermission());
+			return permission;
+		}
+		@Override
+		public String getCommand() {
+			String command = "/message";
+			return command;
+		}
+	},
+	ESS_MESSAGE_CHATCOLOR {
+		@Override
+		public String getPermission() {
+			String permission = "essentials.message.chatcolor";
+			return permission;
+		}
+	
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_MESSAGE_CHATCOLOR.getPermission());
+			return permission;
+		}
+		@Override
+		public String getCommand() {
+			String command = "/message";
 			return command;
 		}
 	},

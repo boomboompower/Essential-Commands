@@ -147,6 +147,20 @@ public enum Error{
 			String error = ChatColor.RED + "The input used is too small.";
 			return error;
 		}
+	},
+	MESSAGING_DISABLED_TARGET {
+		@Override
+		public String sendError() {
+			String error = ChatColor.RED + "The target specified has their messaging disabled.";
+			return error;
+		}
+	},
+	MESSAGING_DISABLED_SENDER {
+		@Override
+		public String sendError() {
+			String error = ChatColor.RED + "You have your messaging disabled.";
+			return error;
+		}
 	};
 	
 	public abstract String sendError();
