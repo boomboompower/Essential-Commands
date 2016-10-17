@@ -15,7 +15,7 @@ public class MeCommand extends BukkitCommand {
 	public MeCommand() {
 		super("me");
 		this.description = "Describe what you're doing.";
-		this.usageMessage = "/me <message";
+		this.usageMessage = "/me <message>";
 		this.setPermission(Permission.ESS_ME.getPermission());
 		this.setPermission(Permission.ESS_ME_CHATCOLOR.getPermission());
 		this.setPermission(Permission.ESS_ALL.getPermission());

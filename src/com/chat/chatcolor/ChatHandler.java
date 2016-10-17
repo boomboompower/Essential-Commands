@@ -23,5 +23,22 @@ public class ChatHandler implements Listener{
 		}
 		else return;
 	}
-	
+	@EventHandler(priority = EventPriority.HIGH)
+	public void format(AsyncPlayerChatEvent e) {
+		/*
+		 * 
+		 * Make a line in the regular config file called ChatFormat
+		 * 
+		 * Check for color codes 
+		 * Check for the following:
+		 * 		- Group
+		 * 		- Username
+		 * 		- Displayname
+		 * 		- World
+		 * 		- Health
+		 *		- Hunger
+		 *		- Worldshort
+		 * 
+		 */
+	}
 }

@@ -20,4 +20,6 @@ public class Groups {
 	public static ArrayList<Player> nomessaging = new ArrayList<Player>();
 	
 	public static ArrayList<Player> socialspy = new ArrayList<Player>();
+	
+	public static ArrayList<Player> god = new ArrayList<Player>();
 }

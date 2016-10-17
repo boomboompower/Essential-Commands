@@ -14,6 +14,7 @@ import org.bukkit.plugin.Plugin;
 import com.njdaeger.essentials.Core;
 import com.njdaeger.essentials.Groups;
 import com.njdaeger.essentials.Util;
+import com.njdaeger.essentials.Util.AfkStatus;
 import com.njdaeger.essentials.exceptions.UnknownActionException;
 
 public class AfkListener implements Listener{
@@ -31,7 +32,7 @@ public class AfkListener implements Listener{
 					e.getAction() == Action.PHYSICAL ||
 					e.getAction() == Action.RIGHT_CLICK_AIR ||
 					e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				Util.setAfk(e.getPlayer());
+				Util.setAfk(e.getPlayer(), AfkStatus.AUTO);
 				return;
 			}
 			else throw new UnknownActionException();
@@ -58,7 +59,7 @@ public class AfkListener implements Listener{
 				
 			}
 			else {
-				Util.setAfk(e.getPlayer());
+				Util.setAfk(e.getPlayer(), AfkStatus.AUTO);
 				return;
 			}
 			
@@ -71,7 +72,7 @@ public class AfkListener implements Listener{
 		Location afk = Groups.afkloc.getOrDefault(e.getPlayer().getName(), e.getPlayer().getLocation());
 		if (Util.isAfk(e.getPlayer())){
 			if (afk.distance(loc) >= 5) {
-				Util.setAfk(e.getPlayer());
+				Util.setAfk(e.getPlayer(), AfkStatus.AUTO);
 			}
 			else return;
 		}
@@ -80,7 +81,7 @@ public class AfkListener implements Listener{
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {
 		if (Util.isAfk(e.getPlayer())) {
-			Util.setAfk(e.getPlayer());
+			Util.setAfk(e.getPlayer(), AfkStatus.AUTO);
 			return;
 		}
 		else return;
