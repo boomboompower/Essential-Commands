@@ -3,3 +3,19 @@ Notes:
 How to create a temp ban command. 
 get the current time. and get the time they are temp banned. 
 check if the old current time equals that plus the time banned
+
+
+How to create groupmanager groups:
+  Create a groupmanager groups file.
+  Get the group names, and then create an arraylist of the group and add players into it as they join or leave, then set their displayname in the correct format.
+  
+Structure:
+  
+  Owner: 
+    default: boolean
+    ladder: int (the highest number means the highest rank)
+    inherits: String[]
+    prefix: String
+    suffix: String 
+    permissions: String[]
+    
