@@ -17,8 +17,16 @@ public class PlayerJoinListener implements Listener{
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
-		PlayerConfig.create(e.getPlayer());
-		e.getPlayer().sendMessage("works");
+		if (PlayerConfig.getPlayerFile(e.getPlayer()) == null) {
+			PlayerConfig.create(e.getPlayer());
+			Bukkit.getLogger().info("Config file for " + e.getPlayer().getName() + " is being created.");
+			return;
+		}
+		else {
+			PlayerConfig.loginUpdate(e.getPlayer());
+			Bukkit.getLogger().info("Config file for " + e.getPlayer().getName() + " loaded.");
+			return;
+		}
 	}
 	
 	
@@ -66,7 +74,10 @@ public class PlayerJoinListener implements Listener{
 	 * 
 	 * EssentialCommands/users/(UserUUID)/user.yml
 	 * EssentialCommands/users/(UserUUID)/homes/homename.yml
-	 * EssentialCommands/Users/(UserUUID)/messages/#.yml 
+	 * EssentialCommands/users/(UserUUID)/messages/#.yml 
+	 * EssentialCommands/warps/warpname.yml
+	 * EssentialCommands/motd.txt
+	 * 
 	 */
 
 }

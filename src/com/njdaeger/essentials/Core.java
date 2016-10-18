@@ -21,6 +21,7 @@ import com.njdaeger.essentials.commands.player.SpeedCommand;
 import com.njdaeger.essentials.commands.world.ServerInfoCommand;
 import com.njdaeger.essentials.listeners.AfkListener;
 import com.njdaeger.essentials.listeners.PlayerJoinListener;
+import com.njdaeger.essentials.listeners.PlayerLeaveListener;
 
 public class Core extends JavaPlugin{
 	
@@ -28,6 +29,7 @@ public class Core extends JavaPlugin{
 		PluginConfiguration.generateNewConfig();
 	}
 	public void registerListeners() {
+		new PlayerLeaveListener(this);
 		new PlayerJoinListener(this);
 		new AfkListener(this);
 		new ChatHandler(this);

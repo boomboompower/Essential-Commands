@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
+import com.njdaeger.essentials.Util;
 import com.njdaeger.essentials.enums.Error;
 import com.njdaeger.essentials.enums.Permission;
 
@@ -42,18 +43,18 @@ public class NickCommand extends BukkitCommand {
 						return true;
 					}
 					if (args[0].equals("off")) {
-						player.setDisplayName(player.getName());
+						Util.setNick(player, player.getName());
 						player.sendMessage(ChatColor.GRAY + "You no longer have a nickname.");
 						return true;
 					}
 					else {
-						player.setDisplayName(ChatColor.translateAlternateColorCodes('&', args[0]) + ChatColor.WHITE);
+						Util.setNick(player, args[0]);
 						player.sendMessage(ChatColor.GRAY + "Your nickname is now \"" + this.getNick(args[0]) + ChatColor.GRAY + "\".");
 						return true;
 					}
 				}
 				else {
-					player.setDisplayName(ChatColor.translateAlternateColorCodes('&', args[0]) + ChatColor.WHITE);
+					Util.setNick(player, args[0]);
 					player.sendMessage(ChatColor.GRAY + "Your nickname is now \"" + this.getNick(args[0]) + ChatColor.GRAY + "\".");
 					return true;
 				}
@@ -71,20 +72,20 @@ public class NickCommand extends BukkitCommand {
 					}
 					if (target.getDisplayName() != target.getName()) {
 						if (args[0].equals("off")) {
-							target.setDisplayName(target.getName());
+							Util.setNick(target, target.getName());
 							sndr.sendMessage(ChatColor.GREEN + target.getName() + ChatColor.GRAY + " no longer has a nickname.");
 							target.sendMessage(ChatColor.GRAY + "You no longer have a nickname.");
 							return true;
 						}
 						else {
-							target.setDisplayName(ChatColor.translateAlternateColorCodes('&', args[0]) + ChatColor.WHITE);
+							Util.setNick(target, args[0]);
 							sndr.sendMessage(ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s nickname is now set too \"" + this.getNick(args[0]) + ChatColor.GRAY + "\".");
 							target.sendMessage(ChatColor.GRAY + "Your nickname is now \"" + this.getNick(args[0]) + ChatColor.GRAY + "\".");
 							return true;
 						}
 					}
 					else {
-						target.setDisplayName(ChatColor.translateAlternateColorCodes('&', args[0]) + ChatColor.WHITE);
+						Util.setNick(target, args[0]);
 						target.sendMessage(ChatColor.GRAY + "Your nickname is now \"" + this.getNick(args[0]) + ChatColor.GRAY + "\".");
 						sndr.sendMessage(ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s nickname is now set too \"" + this.getNick(args[0]) + ChatColor.GRAY + "\".");
 						return true;
@@ -117,20 +118,20 @@ public class NickCommand extends BukkitCommand {
 				}
 				if (target.getDisplayName() != target.getName()) {
 					if (args[0].equals("off")) {
-						target.setDisplayName(target.getName());
+						Util.setNick(target, target.getName());
 						sndr.sendMessage(ChatColor.GREEN + target.getName() + ChatColor.GRAY + " no longer has a nickname.");
 						target.sendMessage(ChatColor.GRAY + "You no longer have a nickname.");
 						return true;
 					}
 					else {
-						target.setDisplayName(ChatColor.translateAlternateColorCodes('&', args[0]) + ChatColor.WHITE);
+						Util.setNick(target, args[0]);
 						target.sendMessage(ChatColor.GRAY + "Your nickname is now \"" + this.getNick(args[0]) + ChatColor.GRAY + "\".");
 						sndr.sendMessage(ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s nickname is now set too \"" + this.getNick(args[0]) + ChatColor.GRAY + "\".");
 						return true;
 					}
 				}
 				else {
-					target.setDisplayName(ChatColor.translateAlternateColorCodes('&', args[0]) + ChatColor.WHITE);
+					Util.setNick(target, args[0]);
 					target.sendMessage(ChatColor.GRAY + "Your nickname is now \"" + this.getNick(args[0]) + ChatColor.GRAY + "\".");
 					sndr.sendMessage(ChatColor.GREEN + target.getName() + ChatColor.GRAY + "'s nickname is now set too \"" + this.getNick(args[0]) + ChatColor.GRAY + "\".");
 					return true;

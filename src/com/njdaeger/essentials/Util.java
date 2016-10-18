@@ -1,11 +1,16 @@
 package com.njdaeger.essentials;
 
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
@@ -108,11 +113,46 @@ public class Util {
 		else return false;
 	}
 	
+	/*
+	 * 
+	 * 
+	 * ####################
+	 * NICKNAME
+	 * ####################
+	 * 
+	 * 
+	 */
+	public static void setNick(Player p, String nickname) {
+		UUID userID = p.getUniqueId();
+		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
+		File dir1 = new File(dir+File.separator+"user.yml");
+		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(dir1);
+		if (!dir.exists()) {
+			return;
+		}
+		if (!dir1.exists()) {
+			return;
+		}
+		else {
+			p.setDisplayName(ChatColor.translateAlternateColorCodes('&', nickname) + ChatColor.WHITE);
+			configuration.set("displayname", nickname);
+			try {
+				configuration.save(dir1);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	
 	/*
+	 * 
+	 * 
 	 * ####################
 	 * AFKSTATUS
 	 * ####################
+	 * 
+	 * 
 	 */
 	public static void setAfk(Player p, AfkStatus status) {
 		if (status.equals(AfkStatus.AUTO)) {
@@ -149,20 +189,70 @@ public class Util {
 	}
 	
 	/*
+	 * 
+	 * 
 	 * ####################
 	 * MUTESTATUS
 	 * ####################
+	 * 
+	 * 
 	 */
-	public static void setMuted(Player p, MuteStatus status) {
+	public static void setMuted(Player p, MuteStatus status, CommandSender sender) { //For commands.
+		if (status.equals(MuteStatus.AUTO)) {
+			if (p.equals(sender)) {
+				if (Groups.muted.contains(p)) {
+					Groups.muted.remove(p);
+					p.sendMessage(ChatColor.GRAY + "You are no longer muted.");
+					return;
+				}
+				else {
+					Groups.muted.add(p);
+					p.sendMessage(ChatColor.GRAY + "You have been muted.");
+					return;
+				}
+			}
+			else {
+				if (Groups.muted.contains(p)) {
+					Groups.muted.remove(p);
+					sender.sendMessage(ChatColor.GREEN + p.getName() + ChatColor.GRAY + " is no longer muted.");
+					p.sendMessage(ChatColor.GRAY + "You are no longer muted.");
+					return;
+				}
+				else {
+					Groups.muted.add(p);
+					sender.sendMessage(ChatColor.GREEN + p.getName() + ChatColor.GRAY + " is now muted.");
+					p.sendMessage(ChatColor.GRAY + "You have been muted.");
+					return;
+				}
+			}
+			
+		}
+		if (status.equals(MuteStatus.TRUE)) {
+			if (!Groups.muted.contains(p)) {
+				Groups.muted.add(p);
+				p.sendMessage(ChatColor.GRAY + "You are now muted.");
+				return;
+			}
+			else return;
+		}
+		if (status.equals(MuteStatus.FALSE)) {
+			if (Groups.muted.contains(p)) {
+				Groups.muted.remove(p);
+				p.sendMessage(ChatColor.GRAY + "You are now unmuted.");
+				return;
+			}
+			else return;
+		}
+		else throw new UnknownStatusException();
+	}
+	public static void setMuted(Player p, MuteStatus status) { //For plugin
 		if (status.equals(MuteStatus.AUTO)) {
 			if (Groups.muted.contains(p)) {
 				Groups.muted.remove(p);
-				p.sendMessage(ChatColor.GRAY + "You are no longer muted.");
 				return;
 			}
 			else {
 				Groups.muted.add(p);
-				p.sendMessage(ChatColor.GRAY + "You have been muted.");
 				return;
 			}
 		}
@@ -182,41 +272,101 @@ public class Util {
 		}
 		else throw new UnknownStatusException();
 	}
-	
 	/*
+	 * 
+	 * 
 	 * ####################
 	 * SPYSTATUS
 	 * ####################
+	 * 
+	 * 
 	 */
-	public static void setSpying(Player p, SpyStatus status) {
-		/*
-		 * need to create a check to see if the method sender was either the plugin or a player issued command. 
-		 */
+	public static void setSpying(Player p, SpyStatus status, CommandSender sender) { //For Commands
 		if (status.equals(SpyStatus.AUTO)) {
 			if (Groups.socialspy.contains(p)) {
 				Groups.socialspy.remove(p);
-				p.sendMessage(ChatColor.GRAY + "You are no longer muted.");
 				return;
 			}
 			else {
 				Groups.socialspy.add(p);
-				p.sendMessage(ChatColor.GRAY + "You have been muted.");
+				return;
+			}	
+		}
+		if (status.equals(SpyStatus.TRUE)) {
+			if (p.equals(sender)) {
+				if (!Groups.socialspy.contains(p)) {
+					Groups.socialspy.add(p);
+					p.sendMessage(ChatColor.GRAY + "Socialspy is now enabled.");
+					return;
+				}
+				else return;
+			}
+			else {
+				if (!Groups.socialspy.contains(p)) {
+					Groups.socialspy.add(p);
+					sender.sendMessage(ChatColor.GRAY + "Socialspy is now enabled for " + ChatColor.GREEN + p.getName());
+					p.sendMessage(ChatColor.GRAY + "Socialspy is now enabled.");
+					return;
+				}
+				else return;
+			}
+		}
+		if (status.equals(SpyStatus.FALSE)) {
+			if (p.equals(sender)) {
+				if (Groups.socialspy.contains(p)) {
+					Groups.socialspy.remove(p);
+					p.sendMessage(ChatColor.GRAY + "Socialspy is now disabled.");
+					return;
+				}
+				else return;
+			}
+			else {
+				if (Groups.socialspy.contains(p)) {
+					Groups.socialspy.remove(p);
+					sender.sendMessage(ChatColor.GRAY + "Socialspy is now disabled for " + ChatColor.GREEN + p.getName());
+					p.sendMessage(ChatColor.GRAY + "Socialspy is now disabled.");
+					return;
+				}
+				else return;
+			}
+		}
+		else throw new UnknownStatusException();
+	}
+	public static void setSpying(Player p, SpyStatus status) { //For Plugin
+		if (status.equals(SpyStatus.AUTO)) {
+			if (Groups.socialspy.contains(p)) {
+				Groups.socialspy.remove(p);
+				return;
+			}
+			else {
+				Groups.socialspy.add(p);
 				return;
 			}
 		}
 		if (status.equals(SpyStatus.TRUE)) {
-			
+			if (!Groups.socialspy.contains(p)) {
+				Groups.socialspy.add(p);
+				return;
+			}
+			else return;
 		}
 		if (status.equals(SpyStatus.FALSE)) {
-			
+			if (Groups.socialspy.contains(p)) {
+				Groups.socialspy.remove(p);
+				return;
+			}
+			else return;
 		}
 		else throw new UnknownStatusException();
 	}
-	
 	/*
+	 * 
+	 * 
 	 * ####################
 	 * HIDDENSTATUS
 	 * ####################
+	 * 
+	 * 
 	 */
 	public static void setHidden(Player p) {
 		if (Groups.vanish.contains(p)) {
@@ -231,9 +381,13 @@ public class Util {
 	}
 	
 	/*
+	 * 
+	 * 
 	 * ####################
 	 * GODSTATUS
 	 * ####################
+	 * 
+	 * 
 	 */
 	public static void setGod(Player p, CommandSender sndr) {
 		if (Groups.god.contains(p)) {
@@ -262,9 +416,13 @@ public class Util {
 	}
 	
 	/*
+	 * 
+	 * 
 	 * ####################
 	 * MESSAGINGSTATUS
 	 * ####################
+	 * 
+	 * 
 	 */
 	public static void setMessaging(Player p, boolean allow) {
 		if (allow == true) {
