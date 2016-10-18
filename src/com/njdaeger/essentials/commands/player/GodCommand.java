@@ -6,6 +6,7 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
 import com.njdaeger.essentials.Util;
+import com.njdaeger.essentials.Util.GodStatus;
 import com.njdaeger.essentials.enums.Error;
 import com.njdaeger.essentials.enums.Permission;
 
@@ -31,7 +32,7 @@ public class GodCommand extends BukkitCommand{
 						sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
 						return true;
 					}
-					Util.setGod(target, sndr);
+					Util.setGod(target, sndr, GodStatus.AUTO);
 					return true;
 					
 				}
@@ -42,7 +43,7 @@ public class GodCommand extends BukkitCommand{
 			}
 			if (args.length == 0) {
 				Player player = (Player) sndr;
-				Util.setGod(player, sndr);
+				Util.setGod(player, sndr, GodStatus.AUTO);
 				return true;
 			}
 			else {
@@ -61,7 +62,7 @@ public class GodCommand extends BukkitCommand{
 					sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
 					return true;
 				}
-				Util.setGod(target, sndr);
+				Util.setGod(target, sndr, GodStatus.AUTO);
 				return true;
 			}
 			else {

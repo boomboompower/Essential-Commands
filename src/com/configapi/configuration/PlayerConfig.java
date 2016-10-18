@@ -341,6 +341,12 @@ public class PlayerConfig {
 		}
 		else throw new UnknownStatusException();
 	}
+	public static void setGod(Player player, YamlConfiguration config) {
+		
+	}
+	public static void setMessageable(Player player, YamlConfiguration config) {
+		
+	}
 }
 
 	

@@ -13,6 +13,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.njdaeger.essentials.enums.Permission;
 import com.njdaeger.essentials.exceptions.UnknownStatusException;
@@ -155,37 +157,74 @@ public class Util {
 	 * 
 	 */
 	public static void setAfk(Player p, AfkStatus status) {
-		if (status.equals(AfkStatus.AUTO)) {
-			if (Groups.afk.contains(p)) {
-				Groups.afk.remove(p);
-				Groups.afkloc.remove(p.getName(), p.getLocation());
-				p.setCollidable(true);
-				Bukkit.broadcastMessage(ChatColor.GRAY + "* " + p.getDisplayName() + ChatColor.GRAY + " is no longer AFK.");
-				return;
-			}
-			else {
-				Groups.afk.add(p);
-				Groups.afkloc.put(p.getName(), p.getLocation());
-				p.setCollidable(false);
-				Bukkit.broadcastMessage(ChatColor.GRAY + "* " + p.getDisplayName() + ChatColor.GRAY + " is now AFK.");
-				return;
-			}
+		UUID userID = p.getUniqueId();
+		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
+		File dir1 = new File(dir+File.separator+"user.yml");
+		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(dir1);
+		if (!dir.exists()) {
+			return;
 		}
-		if (status.equals(AfkStatus.TRUE)) {
-			if (!Groups.afk.contains(p)) {
-				Groups.afk.add(p);
-				return;
-			}
-			else return;
+		if (!dir1.exists()) {
+			return;
 		}
-		if (status.equals(AfkStatus.FALSE)) {
-			if (Groups.afk.contains(p)) {
-				Groups.afk.remove(p);
-				return;
+		else {
+			if (status.equals(AfkStatus.AUTO)) {
+				if (Groups.afk.contains(p)) {
+					Groups.afk.remove(p);
+					configuration.set("afk", false);
+					try {
+						configuration.save(dir1);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					Groups.afkloc.remove(p.getName(), p.getLocation());
+					p.setCollidable(true);
+					Bukkit.broadcastMessage(ChatColor.GRAY + "* " + p.getDisplayName() + ChatColor.GRAY + " is no longer AFK.");
+					return;
+				}
+				else {
+					Groups.afk.add(p);
+					Groups.afkloc.put(p.getName(), p.getLocation());
+					p.setCollidable(false);
+					configuration.set("afk", true);
+					try {
+						configuration.save(dir1);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					Bukkit.broadcastMessage(ChatColor.GRAY + "* " + p.getDisplayName() + ChatColor.GRAY + " is now AFK.");
+					return;
+				}
 			}
-			else return;
+			if (status.equals(AfkStatus.TRUE)) {
+				if (!Groups.afk.contains(p)) {
+					Groups.afk.add(p);
+					configuration.set("afk", true);
+					try {
+						configuration.save(dir1);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					return;
+				}
+				else return;
+			}
+			if (status.equals(AfkStatus.FALSE)) {
+				if (Groups.afk.contains(p)) {
+					Groups.afk.remove(p);
+					configuration.set("afk", false);
+					try {
+						configuration.save(dir1);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					return;
+				}
+				else return;
+			}
+			else throw new UnknownStatusException();
 		}
-		else throw new UnknownStatusException();
+		
 	}
 	
 	/*
@@ -372,11 +411,14 @@ public class Util {
 		if (Groups.vanish.contains(p)) {
 			Groups.vanish.remove(p);
 			p.showPlayer(p);
+			p.removePotionEffect(PotionEffectType.INVISIBILITY);
 			return;
 		}
 		else {
 			Groups.vanish.add(p);
 			p.hidePlayer(p);
+			PotionEffect effect = new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 1, false, false);
+			p.addPotionEffect(effect);
 		}
 	}
 	
@@ -389,30 +431,63 @@ public class Util {
 	 * 
 	 * 
 	 */
-	public static void setGod(Player p, CommandSender sndr) {
-		if (Groups.god.contains(p)) {
-			Groups.god.remove(p);
-			p.setInvulnerable(false);
-			if (p.equals(sndr)) {
-				p.sendMessage(ChatColor.GRAY + "You are no longer in God mode.");
+	public static void setGod(Player p, CommandSender sndr, GodStatus status) {
+		if (status.equals(GodStatus.AUTO)) {
+			if (Groups.god.contains(p)) {
+				Groups.god.remove(p);
+				p.setInvulnerable(false);
+				if (p.equals(sndr)) {
+					p.sendMessage(ChatColor.GRAY + "You are no longer in God mode.");
+				}
+				else {
+					sndr.sendMessage(ChatColor.GRAY + "You turned off " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + "'s God mode.");
+					p.sendMessage(ChatColor.GRAY + "You are no longer in God mode.");
+				}
+				
 			}
 			else {
-				sndr.sendMessage(ChatColor.GRAY + "You turned off " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + "'s God mode.");
-				p.sendMessage(ChatColor.GRAY + "You are no longer in God mode.");
-			}
-			
-		}
-		else {
-			Groups.god.add(p);
-			p.setInvulnerable(true);
-			if (p.equals(sndr)) {
-				p.sendMessage(ChatColor.GRAY + "You are now in God mode.");
-			}
-			else {
-				sndr.sendMessage(ChatColor.GRAY + "You set " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " to God mode.");
-				p.sendMessage(ChatColor.GRAY + "You are now in God mode.");
+				Groups.god.add(p);
+				p.setInvulnerable(true);
+				if (p.equals(sndr)) {
+					p.sendMessage(ChatColor.GRAY + "You are now in God mode.");
+				}
+				else {
+					sndr.sendMessage(ChatColor.GRAY + "You set " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " to God mode.");
+					p.sendMessage(ChatColor.GRAY + "You are now in God mode.");
+				}
 			}
 		}
+		if (status.equals(SpyStatus.TRUE)) {
+			if (!Groups.god.contains(p)) {
+				Groups.god.add(p);
+				if (p.equals(sndr)) {
+					p.sendMessage(ChatColor.GRAY + "You are now in God mode.");
+					return;
+				}
+				else {
+					sndr.sendMessage(ChatColor.GRAY + "You set " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " to God mode.");
+					p.sendMessage(ChatColor.GRAY + "You are now in God mode.");
+					return;
+				}
+			}
+			else return;
+		}
+		if (status.equals(SpyStatus.FALSE)) {
+			if (Groups.god.contains(p)) {
+				Groups.god.remove(p);
+				if (p.equals(sndr)) {
+					p.sendMessage(ChatColor.GRAY + "You are no longer in God mode.");
+					return;
+				}
+				else {
+					sndr.sendMessage(ChatColor.GRAY + "You turned off " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + "'s God mode.");
+					p.sendMessage(ChatColor.GRAY + "You are no longer in God mode.");
+					return;
+				}
+			}
+			else return;
+		}
+		else throw new UnknownStatusException();
 	}
 	
 	/*
@@ -456,6 +531,16 @@ public class Util {
 		FALSE;
 	}
 	public enum SpyStatus {
+		AUTO,
+		TRUE,
+		FALSE;
+	}
+	public enum GodStatus {
+		AUTO, 
+		TRUE,
+		FALSE;
+	}
+	public enum Messageable {
 		AUTO,
 		TRUE,
 		FALSE;
