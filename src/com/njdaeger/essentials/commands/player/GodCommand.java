@@ -5,10 +5,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
-import com.njdaeger.essentials.Util;
-import com.njdaeger.essentials.Util.GodStatus;
 import com.njdaeger.essentials.enums.Error;
 import com.njdaeger.essentials.enums.Permission;
+import com.njdaeger.essentials.utils.Util;
+import com.njdaeger.essentials.utils.Util.GodStatus;
 
 public class GodCommand extends BukkitCommand{
 	

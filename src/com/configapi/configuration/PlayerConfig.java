@@ -10,10 +10,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.njdaeger.essentials.Util;
-import com.njdaeger.essentials.Util.MuteStatus;
-import com.njdaeger.essentials.Util.SpyStatus;
 import com.njdaeger.essentials.exceptions.UnknownStatusException;
+import com.njdaeger.essentials.utils.MuteStatus;
+import com.njdaeger.essentials.utils.SpyStatus;
+import com.njdaeger.essentials.utils.Status;
+import com.njdaeger.essentials.utils.Util;
 
 public class PlayerConfig {
 	
@@ -262,6 +263,10 @@ public class PlayerConfig {
 	 * 
 	 * 
 	 */
+	/**
+	 * @param player - Gets this player's configuration file.
+	 * @return
+	 */
 	public static YamlConfiguration getPlayerFile(Player player) {
 		UUID userID = player.getUniqueId();
 		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
@@ -325,19 +330,19 @@ public class PlayerConfig {
 	 */
 	public static void setMuted(Player player, YamlConfiguration config) {
 		if (config.get("muted").equals(true)) {
-			Util.setMuted(player, MuteStatus.TRUE);
+			MuteStatus.setMuted(player, Status.TRUE);
 		}
 		if (config.get("muted").equals(false)) {
-			Util.setMuted(player, MuteStatus.FALSE);
+			MuteStatus.setMuted(player, Status.FALSE);
 		}
 		else throw new UnknownStatusException();
 	}
 	public static void setSpying(Player player, YamlConfiguration config) {
 		if (config.get("socialspy").equals(true)) {
-			Util.setSpying(player, SpyStatus.TRUE);
+			SpyStatus.setSpying(player, Status.TRUE);
 		}
 		if (config.get("socialspy").equals(false)) {
-			Util.setSpying(player, SpyStatus.FALSE);
+			SpyStatus.setSpying(player, Status.FALSE);
 		}
 		else throw new UnknownStatusException();
 	}

@@ -8,9 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
-import com.njdaeger.essentials.Util;
 import com.njdaeger.essentials.enums.Error;
 import com.njdaeger.essentials.enums.Permission;
+import com.njdaeger.essentials.utils.Util;
 
 public class MessageCommand extends BukkitCommand {
 	
