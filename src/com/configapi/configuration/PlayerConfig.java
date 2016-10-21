@@ -16,6 +16,14 @@ import com.njdaeger.essentials.utils.SpyStatus;
 import com.njdaeger.essentials.utils.Status;
 import com.njdaeger.essentials.utils.Util;
 
+/**
+ * @author Noah
+ *
+ */
+/**
+ * @author Noah
+ *
+ */
 public class PlayerConfig {
 	
 	public static void warn(String message) {
@@ -36,6 +44,10 @@ public class PlayerConfig {
 	 * 
 	 * 
 	 * 
+	 */
+	
+	/**<p>Creates a new config file for the player if it doesn't exist already.</p>
+	 * @param player - Target player to create config for.
 	 */
 	public static void create(Player player) {
 		UUID userID = player.getUniqueId();
@@ -144,6 +156,10 @@ public class PlayerConfig {
 	 * 
 	 * 
 	 */
+	
+	/**<p>Logout update is a player update that should activate when the target player leaves the server. </p>
+	 * @param player - Player getting updated.
+	 */
 	public static void logoutUpdate(Player player) {
 		UUID userID = player.getUniqueId();
 		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
@@ -206,6 +222,10 @@ public class PlayerConfig {
 	 * 
 	 * 
 	 * 
+	 */
+	
+	/**<p>Login update is for when a player logs into the server. The server will update the player according to how his or her config file is setup.</p>
+	 * @param player - Player getting updated.
 	 */
 	public static void loginUpdate(Player player) {
 		UUID userID = player.getUniqueId();
@@ -328,6 +348,11 @@ public class PlayerConfig {
 	 * 
 	 * 
 	 */
+	
+	/**
+	 * @param player - Target player to set muted.
+	 * @param config - Target player's config file.
+	 */
 	public static void setMuted(Player player, YamlConfiguration config) {
 		if (config.get("muted").equals(true)) {
 			MuteStatus.setMuted(player, Status.TRUE);
@@ -337,6 +362,10 @@ public class PlayerConfig {
 		}
 		else throw new UnknownStatusException();
 	}
+	/**
+	 * @param player - Target player to set socialspy.
+	 * @param config - Target player's config file.
+	 */
 	public static void setSpying(Player player, YamlConfiguration config) {
 		if (config.get("socialspy").equals(true)) {
 			SpyStatus.setSpying(player, Status.TRUE);
@@ -346,9 +375,17 @@ public class PlayerConfig {
 		}
 		else throw new UnknownStatusException();
 	}
+	/**
+	 * @param player - Target player to set god mode.
+	 * @param config - Target player's config file.
+	 */
 	public static void setGod(Player player, YamlConfiguration config) {
 		
 	}
+	/**
+	 * @param player - Target player to set messageable
+	 * @param config - Target player's config file.
+	 */
 	public static void setMessageable(Player player, YamlConfiguration config) {
 		
 	}

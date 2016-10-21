@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 
 import com.njdaeger.essentials.enums.Error;
 import com.njdaeger.essentials.enums.Permission;
-import com.njdaeger.essentials.utils.Util;
-import com.njdaeger.essentials.utils.Util.AfkStatus;
+import com.njdaeger.essentials.utils.AfkStatus;
+import com.njdaeger.essentials.utils.Status;
 
 public class AfkCommand extends BukkitCommand{
 
@@ -38,7 +38,7 @@ public class AfkCommand extends BukkitCommand{
 				}
 				else {
 					Player player = Bukkit.getPlayer(args[0]);
-					Util.setAfk(player, AfkStatus.AUTO);
+					AfkStatus.setAfk(player, Status.AUTO);
 					return true;
 				}
 			} 
@@ -60,7 +60,7 @@ public class AfkCommand extends BukkitCommand{
 				}
 				else {
 					Player player = Bukkit.getPlayer(args[0]);
-					Util.setAfk(player, AfkStatus.AUTO);
+					AfkStatus.setAfk(player, Status.AUTO);
 					return true;
 				}
 			} 
@@ -71,7 +71,7 @@ public class AfkCommand extends BukkitCommand{
 		}
 		if (args.length == 0) {
 			Player sender = (Player) sndr;
-			Util.setAfk(sender, AfkStatus.AUTO);
+			AfkStatus.setAfk(sender, Status.AUTO);
 			return true;
 		} 
 		else {

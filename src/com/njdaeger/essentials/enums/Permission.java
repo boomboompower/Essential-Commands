@@ -88,6 +88,20 @@ public enum Permission {
 		}
 		
 	},
+	ESS_BAN_NOTIFY {
+
+		@Override
+		public String getPermission() {
+			String permission = "essentials.ban.notify";
+			return permission;
+		}
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_BAN_NOTIFY.getPermission());
+			return permission;
+		}
+		
+	},
 	ESS_BREAK {
 		@Override
 		public String getPermission() {
