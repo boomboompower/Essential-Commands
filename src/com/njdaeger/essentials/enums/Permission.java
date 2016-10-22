@@ -622,6 +622,23 @@ public enum Permission {
 			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_SPEED_OTHER.getPermission());
 			return permission;
 		}
+	},
+	ESS_TEMPBAN {
+		@Override
+		public String getPermission() {
+			String permission = "essentials.tempban";
+			return permission;
+		}
+		@Override
+		public String getCommand() {
+			String command = "/tempban";
+			return command;
+		}
+		@Override
+		public org.bukkit.permissions.Permission registerPermission() {
+			org.bukkit.permissions.Permission permission = new org.bukkit.permissions.Permission(ESS_TEMPBAN.getPermission());
+			return permission;
+		}
 	};
 	
 	public String perm = "";

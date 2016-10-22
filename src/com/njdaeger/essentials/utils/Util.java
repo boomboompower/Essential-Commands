@@ -19,6 +19,10 @@ import org.bukkit.potion.PotionEffectType;
 import com.njdaeger.essentials.Groups;
 import com.njdaeger.essentials.enums.Permission;
 
+/**
+ * @author Noah
+ *
+ */
 public class Util {
 	
 	private static ChatColor gy = ChatColor.GRAY;
@@ -169,17 +173,42 @@ public class Util {
 			p.addPotionEffect(effect);
 		}
 	}
-	public static void getPlayerTime(Player target) {
+	
+	/**
+	 * Returns the players logout time.
+	 * @param target
+	 * @return
+	 */
+	public static Object getPlayerLogoutTime(Player target) {
 		UUID userID = target.getUniqueId();
 		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
 		File dir1 = new File(dir+File.separator+"user.yml");
 		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(dir1);
 		if (!dir.exists()) {
-			return;
+			return null;
 		}
 		if (!dir1.exists()) {
-			return;
+			return null;
 		}
 		Object time = configuration.get("logout");
+		return time;
+	}
+	public static Object getPlayerLoginTime(Player target) {
+		UUID userID = target.getUniqueId();
+		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
+		File dir1 = new File(dir+File.separator+"user.yml");
+		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(dir1);
+		if (!dir.exists()) {
+			return null;
+		}
+		if (!dir1.exists()) {
+			return null;
+		}
+		Object time = configuration.get("login");
+		return time;
+	}
+	public static Object getCurrentTime() {
+		Object time = System.currentTimeMillis();
+		return time;
 	}
 }

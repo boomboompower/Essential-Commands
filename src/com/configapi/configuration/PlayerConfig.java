@@ -208,22 +208,6 @@ public class PlayerConfig {
 			return;
 		}
 	}
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * Updating the player's config when they login. 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	
 	/**<p>Login update is for when a player logs into the server. The server will update the player according to how his or her config file is setup.</p>
 	 * @param player - Player getting updated.
 	 */
@@ -248,8 +232,8 @@ public class PlayerConfig {
 				uconfig.set("flyspeed", player.getFlySpeed());
 				uconfig.set("walkspeed", player.getWalkSpeed());
 				uconfig.set("op", player.isOp());
-				uconfig.set("banned", player.isBanned());
 				uconfig.set("login", System.currentTimeMillis());
+				PlayerConfig.isBanned(player);
 				try {
 					uconfig.save(dir1);
 				} catch (IOException e) {
@@ -388,6 +372,58 @@ public class PlayerConfig {
 	 */
 	public static void setMessageable(Player player, YamlConfiguration config) {
 		
+	}
+	/**
+	 * @param player - Player to check the temp ban on. 
+	 */
+	public static void isBanned(Player player) {
+		UUID userID = player.getUniqueId();
+		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
+		File dir1 = new File(dir+File.separator+"user.yml");
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(dir1);
+		if (!dir.exists()) {
+			return;
+		}
+		if (!dir1.exists()) {
+			return;
+		}
+		if (config.get("unbantime").equals(null)) {
+			return;
+		}
+		if (config.get("banned").equals(true)) {
+			player.kickPlayer(ChatColor.RED + "You are still banned. If you believe this is an error, contact an administrator to resolve the issue.");
+			return;
+		}
+		Object ubt = config.get("unbantime").toString();
+		long time = Long.parseLong(ubt.toString());
+		if (Util.isNumber(ubt.toString())) {
+			if (time >= System.currentTimeMillis()) {
+				config.set("unbantime", null);
+				config.set("banned", false);
+				try {
+					config.save(dir1);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else {
+				player.kickPlayer(ChatColor.RED + "You are still banned. If you believe this is an error, contact an administrator to resolve the issue.");
+				return;
+			}
+		}
+		if (config.get("banned").equals(true)) {
+			player.kickPlayer(ChatColor.RED + "You are still banned. If you believe this is an error, contact an administrator to resolve the issue.");
+			return;
+		}
+		else {
+			config.set("unbantime", null);
+			config.set("banned", false);
+			try {
+				config.save(dir1);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
 
