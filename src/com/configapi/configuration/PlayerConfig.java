@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import com.njdaeger.essentials.exceptions.UnknownException;
 import com.njdaeger.essentials.exceptions.UnknownStatusException;
 import com.njdaeger.essentials.utils.MuteStatus;
 import com.njdaeger.essentials.utils.SpyStatus;
@@ -219,7 +220,7 @@ public class PlayerConfig {
 			if (dir1.exists()) {
 				YamlConfiguration uconfig = YamlConfiguration.loadConfiguration(dir1);
 				uconfig.set("playername", player.getName());
-				player.setDisplayName(ChatColor.translateAlternateColorCodes('&', uconfig.get("displayname").toString()) + ChatColor.WHITE);
+				player.setDisplayName(ChatColor.translateAlternateColorCodes('&', uconfig.get("displayname").toString()));
 				uconfig.set("messaging", Util.allowsMessaging(player));
 				uconfig.set("rank", null);
 				PlayerConfig.setMuted(player, uconfig);
@@ -382,47 +383,55 @@ public class PlayerConfig {
 		File dir1 = new File(dir+File.separator+"user.yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(dir1);
 		if (!dir.exists()) {
+			Bukkit.getLogger().info("1");
 			return;
 		}
 		if (!dir1.exists()) {
+			Bukkit.getLogger().info("2");
 			return;
 		}
-		if (config.get("unbantime").equals(null)) {
+		if ((config.get("unbantime") == null) && (config.get("banned").equals(false))) {
+			Bukkit.getLogger().info("3");
 			return;
 		}
-		if (config.get("banned").equals(true)) {
-			player.kickPlayer(ChatColor.RED + "You are still banned. If you believe this is an error, contact an administrator to resolve the issue.");
-			return;
-		}
-		Object ubt = config.get("unbantime").toString();
-		long time = Long.parseLong(ubt.toString());
-		if (Util.isNumber(ubt.toString())) {
-			if (time >= System.currentTimeMillis()) {
-				config.set("unbantime", null);
-				config.set("banned", false);
+		if ((config.get("unbantime") != null) && (config.get("banned").equals(false))) {
+			Bukkit.getLogger().info("4");
+			long ubt = config.getLong("unbantime");
+			if (ubt <= System.currentTimeMillis()) {
+				config.set("unbantime", "");
+				config.set("banned", "false");
 				try {
 					config.save(dir1);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				Bukkit.getLogger().info("5");
+				return;
 			}
 			else {
 				player.kickPlayer(ChatColor.RED + "You are still banned. If you believe this is an error, contact an administrator to resolve the issue.");
+				Bukkit.getLogger().info("6");
 				return;
 			}
 		}
-		if (config.get("banned").equals(true)) {
+		if ((config.get("unbantime") == null) && (config.getBoolean("banned") == true)) {
 			player.kickPlayer(ChatColor.RED + "You are still banned. If you believe this is an error, contact an administrator to resolve the issue.");
+			Bukkit.getLogger().info("7");
+			return;
+		}
+		if ((config.get("unbantime") != null) && (config.getBoolean("banned") == true)) {
+			player.kickPlayer(ChatColor.RED + "You are still banned. If you believe this is an error, contact an administrator to resolve the issue.");
+			Bukkit.getLogger().info("8");
 			return;
 		}
 		else {
-			config.set("unbantime", null);
-			config.set("banned", false);
 			try {
-				config.save(dir1);
-			} catch (IOException e) {
+				throw new UnknownException();
+			} catch (UnknownException e) {
 				e.printStackTrace();
+				Bukkit.getLogger().info("9");
 			}
+			return;
 		}
 	}
 }

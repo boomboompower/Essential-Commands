@@ -161,6 +161,29 @@ public enum Error{
 			String error = ChatColor.RED + "You have your messaging disabled.";
 			return error;
 		}
+	},
+	CANNOT_BAN_TARGET {
+
+		@Override
+		public String sendError() {
+			String error = ChatColor.RED + "Player cannot be banned.";
+			return error;
+		}
+		
+	},
+	UNKNOWN_BAN_TYPE {
+		@Override
+		public String sendError() {
+			String error = ChatColor.RED + "Unknown ban type.";
+			return error;
+		}
+	},
+	BAN_WRONG_FORMAT {
+		@Override
+		public String sendError() {
+			String error = ChatColor.RED + "Insert a \":\" between the time and the ban type.";
+			return error;
+		}
 	};
 	
 	public abstract String sendError();

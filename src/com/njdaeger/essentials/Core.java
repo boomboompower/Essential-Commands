@@ -51,7 +51,8 @@ public class Core extends JavaPlugin{
 		Plugin.getCommand("position", new GetPositionCommand()); //Finished
 		Plugin.getCommand("heal", new HealCommand()); //Finished
 		Plugin.getCommand("me", new MeCommand()); //Finished
-		Plugin.getCommand("message", new MessageCommand()); //Finished
+		Plugin.getCommand("message", new MessageCommand()); //Finished 
+		//TODO MANUALLY ADD PERMISSION CHECKS TO COMMANDS!
 		Plugin.getCommand("tempban", new TempBanCommand()); //Permission testing
 		
 	}
