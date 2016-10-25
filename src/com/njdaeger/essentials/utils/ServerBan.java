@@ -1,15 +1,17 @@
 package com.njdaeger.essentials.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import net.md_5.bungee.api.ChatColor;
 
+import org.bukkit.BanList;
+import org.bukkit.BanList.Type;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.njdaeger.essentials.enums.BanMessage;
@@ -19,62 +21,32 @@ import com.njdaeger.essentials.enums.Permission;
 public class ServerBan {
 	
 	/**
+	 * Creates a new perm ban.
 	 * @param target - Target player to ban
 	 * @param reason - Ban reason
 	 * @param bancreator - Creator of the ban, if null then it defaults to the console.
 	 * @param kickmessage - Player kick message.
 	 */
-	public static void newPermBan(Player target, String reason, String bancreator, String kickmessage) {
-		UUID userID = target.getUniqueId();
-		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
-		File dir1 = new File(dir+File.separator+"user.yml");
-		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(dir1);
-		if (!dir.exists()) {
-			return;
-		}
-		if (!dir1.exists()) {
-			return;
-		}
-		if (reason == null) {
-			reason += BanMessage.BANNED_NOREASON.banNoReason();
-		}
-		if(bancreator == null) {
-			bancreator += "CONSOLE";
-		}
-		configuration.set("banned", true);
-		try {
-			configuration.save(dir1);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		target.kickPlayer(kickmessage);
-		Bukkit.broadcast(ChatColor.RED + target.getName() + ChatColor.GRAY + " has been perm-banned by " + bancreator + " for: " + ChatColor.RED + reason , Permission.ESS_BAN_NOTIFY.getPermission());
+	public static void newPermBan(Player target, String reason, CommandSender bancreator) {
+		Bukkit.getServer().getBanList(Type.NAME).addBan(target.getName(), ServerBan.breason(target, bancreator, reason), null, bancreator.getName());
+		target.kickPlayer(ServerBan.breason(target, bancreator, reason));
+		Bukkit.broadcast(ServerBan.breason(target, bancreator, reason), Permission.ESS_BAN_NOTIFY.getPermission());
+		return;
 	}
 	/**
-	 * @param target - Target player to ban
-	 * @param reason - Ban reason
-	 * @param bancreator - Creator of the ban, if null then it defaults to the console.
-	 * @param time - Temp ban time with proper format.
+	 * 
+	 * Creates a new temp ban. 
+	 * @param target - Target player to temp ban.
+	 * @param reason - Reason for temp ban.
+	 * @param bancreator - Commandsender
+	 * @param time - The input time the sender enters
 	 */
 	public static void newTempBan(Player target, String reason, CommandSender bancreator, String time) {
-		UUID userID = target.getUniqueId();
-		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
-		File dir1 = new File(dir+File.separator+"user.yml");
-		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(dir1);
-		if (!dir.exists()) {
-			return;
-		}
-		if (!dir1.exists()) {
-			return;
-		}
 		if (!time.contains(":")) {
 			bancreator.sendMessage(Error.BAN_WRONG_FORMAT.sendError());
 			return;
 		}
 		String units = "";
-		
-		
-		
 		if (time.contains("d")) {
 			String[] split = time.split(":");
 			units += "day(s)";
@@ -88,13 +60,7 @@ public class ServerBan {
 			}
 			long a = Long.parseLong(split[0]);
 			long bantime = TimeUnit.DAYS.toMillis(a) + System.currentTimeMillis();
-			configuration.set("unbantime", bantime);
-			configuration.set("banned", true);
-			try {
-				configuration.save(dir1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			Bukkit.getServer().getBanList(BanList.Type.NAME).addBan(target.getName(), ServerBan.freason(target, bancreator, reason, split[0], units), ServerBan.expire(bantime), bancreator.getName());
 			target.kickPlayer(ServerBan.freason(target, bancreator, reason, split[0], units));
 			Bukkit.broadcast(ServerBan.freason(target, bancreator, reason, split[0], units), Permission.ESS_BAN_NOTIFY.getPermission());
 			return;
@@ -114,13 +80,7 @@ public class ServerBan {
 			}
 			long a = Long.parseLong(split[0]);
 			long bantime = TimeUnit.HOURS.toMillis(a) + System.currentTimeMillis();
-			configuration.set("unbantime", bantime);
-			configuration.set("banned", true);
-			try {
-				configuration.save(dir1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			Bukkit.getServer().getBanList(BanList.Type.NAME).addBan(target.getName(), ServerBan.freason(target, bancreator, reason, split[0], units), ServerBan.expire(bantime), bancreator.getName());
 			target.kickPlayer(ServerBan.freason(target, bancreator, reason, split[0], units));
 			Bukkit.broadcast(ServerBan.freason(target, bancreator, reason, split[0], units), Permission.ESS_BAN_NOTIFY.getPermission());
 			return;
@@ -140,13 +100,7 @@ public class ServerBan {
 			}
 			long a = Long.parseLong(split[0]);
 			long bantime = TimeUnit.MINUTES.toMillis(a) + System.currentTimeMillis();
-			configuration.set("unbantime", bantime);
-			configuration.set("banned", true);
-			try {
-				configuration.save(dir1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			Bukkit.getServer().getBanList(BanList.Type.NAME).addBan(target.getName(), ServerBan.freason(target, bancreator, reason, split[0], units), ServerBan.expire(bantime), bancreator.getName());
 			target.kickPlayer(ServerBan.freason(target, bancreator, reason, split[0], units));
 			Bukkit.broadcast(ServerBan.freason(target, bancreator, reason, split[0], units), Permission.ESS_BAN_NOTIFY.getPermission());
 			return;
@@ -166,13 +120,7 @@ public class ServerBan {
 			}
 			long a = Long.parseLong(split[0]);
 			long bantime = TimeUnit.SECONDS.toMillis(a) + System.currentTimeMillis();
-			configuration.set("unbantime", bantime);
-			configuration.set("banned", true);
-			try {
-				configuration.save(dir1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			Bukkit.getServer().getBanList(BanList.Type.NAME).addBan(target.getName(), ServerBan.freason(target, bancreator, reason, split[0], units), ServerBan.expire(bantime), bancreator.getName());
 			target.kickPlayer(ServerBan.freason(target, bancreator, reason, split[0], units));
 			Bukkit.broadcast(ServerBan.freason(target, bancreator, reason, split[0], units), Permission.ESS_BAN_NOTIFY.getPermission());
 			return;
@@ -181,55 +129,32 @@ public class ServerBan {
 			bancreator.sendMessage(Error.UNKNOWN_BAN_TYPE.sendError());
 			return;
 		}
-		/*
-		 * Add a compressing algorithm that when the player is banned it writes down the duration until unban. Then when the player joins it then 
-		 */
 	}
-	
 	
 	/**
 	 * @param player -  Target player to unban.
 	 */
 	public static void unban(Player player) {
-		UUID userID = player.getUniqueId();
-		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
-		File dir1 = new File(dir+File.separator+"user.yml");
-		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(dir1);
-		if (!dir.exists()) {
-			return;
-		}
-		if (!dir1.exists()) {
-			return;
-		}
-		if (configuration.get("banned").equals(true) && !configuration.get("unbantime").equals(null)) {
-			configuration.set("banned", false);
-			configuration.set("unbantime", null);
-			try {
-				configuration.save(dir1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		if (configuration.get("banned").equals(false) && !configuration.get("unbantime").equals(null)) {
-			configuration.set("unbantime", null);
-			try {
-				configuration.save(dir1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		if (configuration.get("banned").equals(true) && configuration.get("unbantime").equals(null)) {
-			configuration.set("banned", false);
-			try {
-				configuration.save(dir1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if (player.isBanned()) {
+			Bukkit.getServer().getBanList(Type.NAME).pardon(player.getName());
 		}
 		else {
 			return;
 		}
 	}
+	/*
+	 * Private Utils
+	 */
+	/**
+	 * FOR TEMP BAN METHOD ONLY!
+	 * Determined the message to send to the players and the server when the player is temp banned. 
+	 * @param target - Target player.
+	 * @param bancreator - Creator of ban (commandsender)
+	 * @param reason - Reason for punishment
+	 * @param time - How long of a temp ban
+	 * @param units - Unit type of temp ban. So, "d" (day), "m"(minute), "h"(hour), "s"(second)
+	 * @return
+	 */
 	private static String freason(Player target, CommandSender bancreator, String reason, String time, String units) {
 		String freason1 = "";
 		if (reason == null) {
@@ -250,5 +175,48 @@ public class ServerBan {
 					ChatColor.RED + time + ChatColor.GRAY + " " + units;
 			return freason1;
 		}
+	}
+	
+	/**
+	 * FOR BAN METHOD ONLY!
+	 * Determines the message to send to the player and the server when the player is banned.
+	 * @param target - Target player.
+	 * @param bancreator - Creator of ban (commandsender)
+	 * @param reason - Reason for punishment
+	 * @return
+	 */
+	private static String breason(Player target, CommandSender bancreator, String reason) {
+		String freason1 = "";
+		if (reason == null) {
+			freason1 += ChatColor.RED + target.getName() + 
+					ChatColor.GRAY + " has been banned by " +
+					ChatColor.GREEN + bancreator.getName() + ChatColor.GRAY + " for: " + 
+					ChatColor.RED + BanMessage.TEMP_NOREASON.banNoReason() + 
+					ChatColor.GRAY + ".";
+			return freason1;
+		}
+		else {
+			freason1 += ChatColor.RED + target.getName() + 
+					ChatColor.GRAY + " has been temp-banned by " +
+					ChatColor.GREEN + bancreator.getName() + ChatColor.GRAY + " for: " + 
+					ChatColor.RED + BanMessage.TEMP_REASON.banReason(reason) + 
+					ChatColor.GRAY + ".";
+			return freason1;
+		}
+	}
+	
+	/**
+	 * @param expirationDate simple date converter.
+	 * @return
+	 */
+	public static Date expire(long expirationDate) {
+		Date date = new Date(expirationDate);
+		DateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+		try {
+			return format.parse(format.format(date));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

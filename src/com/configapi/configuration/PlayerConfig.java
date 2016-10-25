@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.njdaeger.essentials.exceptions.UnknownException;
 import com.njdaeger.essentials.exceptions.UnknownStatusException;
 import com.njdaeger.essentials.utils.MuteStatus;
 import com.njdaeger.essentials.utils.SpyStatus;
@@ -25,28 +24,12 @@ import com.njdaeger.essentials.utils.Util;
  * @author Noah
  *
  */
-public class PlayerConfig {
+public class PlayerConfig{
 	
 	public static void warn(String message) {
 		Bukkit.getServer().getLogger().warning(message);
 		return;
 	}
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * Creating the players config.
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	
 	/**<p>Creates a new config file for the player if it doesn't exist already.</p>
 	 * @param player - Target player to create config for.
 	 */
@@ -75,7 +58,6 @@ public class PlayerConfig {
 					uconfig.set("flyspeed", player.getFlySpeed());
 					uconfig.set("walkspeed", player.getWalkSpeed());
 					uconfig.set("op", player.isOp());
-					uconfig.set("banned", player.isBanned());
 					uconfig.set("login", System.currentTimeMillis());
 					uconfig.set("logout", null);
 					uconfig.set("lastlocation.world", player.getWorld().getName());
@@ -121,7 +103,6 @@ public class PlayerConfig {
 				uconfig.set("flyspeed", player.getFlySpeed());
 				uconfig.set("walkspeed", player.getWalkSpeed());
 				uconfig.set("op", player.isOp());
-				uconfig.set("banned", player.isBanned());
 				uconfig.set("login", System.currentTimeMillis());
 				uconfig.set("logout", null);
 				uconfig.set("lastlocation.world", player.getWorld().getName());
@@ -142,22 +123,6 @@ public class PlayerConfig {
 			}
 		}
 	}
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * Updating the player's config when they logout.
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	
 	/**<p>Logout update is a player update that should activate when the target player leaves the server. </p>
 	 * @param player - Player getting updated.
 	 */
@@ -184,7 +149,6 @@ public class PlayerConfig {
 				uconfig.set("flyspeed", player.getFlySpeed());
 				uconfig.set("walkspeed", player.getWalkSpeed());
 				uconfig.set("op", player.isOp());
-				uconfig.set("banned", player.isBanned());
 				uconfig.set("logout", System.currentTimeMillis());
 				uconfig.set("logoutlocation.world", player.getWorld().getName());
 				uconfig.set("logoutlocation.x", player.getLocation().getX());
@@ -234,7 +198,6 @@ public class PlayerConfig {
 				uconfig.set("walkspeed", player.getWalkSpeed());
 				uconfig.set("op", player.isOp());
 				uconfig.set("login", System.currentTimeMillis());
-				PlayerConfig.isBanned(player);
 				try {
 					uconfig.save(dir1);
 				} catch (IOException e) {
@@ -253,21 +216,6 @@ public class PlayerConfig {
 			return;
 		}
 	}
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * Getting the players config. 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
 	/**
 	 * @param player - Gets this player's configuration file.
 	 * @return
@@ -284,56 +232,6 @@ public class PlayerConfig {
 		}
 		else return YamlConfiguration.loadConfiguration(dir1);
 	}
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * Saving a player config file.
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	public static void savePlayerFile(Player player) {
-		UUID userID = player.getUniqueId();
-		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
-		File dir1 = new File(dir+File.separator+"user.yml");
-		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(dir1);
-		if (!dir.exists()) {
-			return;
-		}
-		if (!dir1.exists()) {
-			return;
-		}
-		else {
-			try {
-				configuration.save(dir1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-	}
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * Below are the value setters for the login update check. 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	
 	/**
 	 * @param player - Target player to set muted.
 	 * @param config - Target player's config file.
@@ -372,67 +270,6 @@ public class PlayerConfig {
 	 * @param config - Target player's config file.
 	 */
 	public static void setMessageable(Player player, YamlConfiguration config) {
-		
-	}
-	/**
-	 * @param player - Player to check the temp ban on. 
-	 */
-	public static void isBanned(Player player) {
-		UUID userID = player.getUniqueId();
-		File dir = new File("plugins"+File.separator+"EssentialCommands"+File.separator+"users"+File.separator+userID);
-		File dir1 = new File(dir+File.separator+"user.yml");
-		YamlConfiguration config = YamlConfiguration.loadConfiguration(dir1);
-		if (!dir.exists()) {
-			Bukkit.getLogger().info("1");
-			return;
-		}
-		if (!dir1.exists()) {
-			Bukkit.getLogger().info("2");
-			return;
-		}
-		if ((config.get("unbantime") == null) && (config.get("banned").equals(false))) {
-			Bukkit.getLogger().info("3");
-			return;
-		}
-		if ((config.get("unbantime") != null) && (config.get("banned").equals(false))) {
-			Bukkit.getLogger().info("4");
-			long ubt = config.getLong("unbantime");
-			if (ubt <= System.currentTimeMillis()) {
-				config.set("unbantime", "");
-				config.set("banned", "false");
-				try {
-					config.save(dir1);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				Bukkit.getLogger().info("5");
-				return;
-			}
-			else {
-				player.kickPlayer(ChatColor.RED + "You are still banned. If you believe this is an error, contact an administrator to resolve the issue.");
-				Bukkit.getLogger().info("6");
-				return;
-			}
-		}
-		if ((config.get("unbantime") == null) && (config.getBoolean("banned") == true)) {
-			player.kickPlayer(ChatColor.RED + "You are still banned. If you believe this is an error, contact an administrator to resolve the issue.");
-			Bukkit.getLogger().info("7");
-			return;
-		}
-		if ((config.get("unbantime") != null) && (config.getBoolean("banned") == true)) {
-			player.kickPlayer(ChatColor.RED + "You are still banned. If you believe this is an error, contact an administrator to resolve the issue.");
-			Bukkit.getLogger().info("8");
-			return;
-		}
-		else {
-			try {
-				throw new UnknownException();
-			} catch (UnknownException e) {
-				e.printStackTrace();
-				Bukkit.getLogger().info("9");
-			}
-			return;
-		}
 	}
 }
 
