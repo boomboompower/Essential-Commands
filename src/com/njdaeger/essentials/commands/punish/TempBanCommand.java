@@ -112,4 +112,20 @@ public class TempBanCommand extends BukkitCommand{
 			}
 		}
 	}
+	
+	/**
+     	* Used to get arguments from a command
+   	*
+   	* @param start the argument to start from.
+   	* @param args command argument list
+    	* @return the arguments after the specified point
+   	*/
+	private String getArguments(int start, String[] args) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = start; i < args.length; i++) {
+            builder.append(args[i]);
+            builder.append(" ");
+        }
+        return builder.toString().trim();
+    }
 }
