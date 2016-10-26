@@ -134,11 +134,13 @@ public class ServerBan {
 	/**
 	 * @param player -  Target player to unban.
 	 */
-	public static void unban(Player player) {
-		if (player.isBanned()) {
-			Bukkit.getServer().getBanList(Type.NAME).pardon(player.getName());
+	public static void unban(String player, CommandSender sndr) {
+		if (Bukkit.getBannedPlayers().contains(player)) {
+			Bukkit.getServer().getBanList(Type.NAME).pardon(player);
+			sndr.sendMessage(ChatColor.GRAY + "You unbanned " + ChatColor.GREEN + player + ChatColor.GRAY + " from the server.");
 		}
 		else {
+			sndr.sendMessage(Error.PLAYER_NOT_BANNED.sendError());
 			return;
 		}
 	}

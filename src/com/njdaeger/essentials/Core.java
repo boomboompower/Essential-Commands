@@ -18,7 +18,9 @@ import com.njdaeger.essentials.commands.player.GodCommand;
 import com.njdaeger.essentials.commands.player.HealCommand;
 import com.njdaeger.essentials.commands.player.NickCommand;
 import com.njdaeger.essentials.commands.player.SpeedCommand;
+import com.njdaeger.essentials.commands.punish.BanCommand;
 import com.njdaeger.essentials.commands.punish.TempBanCommand;
+import com.njdaeger.essentials.commands.punish.UnbanCommand;
 import com.njdaeger.essentials.commands.world.ServerInfoCommand;
 import com.njdaeger.essentials.listeners.AfkListener;
 import com.njdaeger.essentials.listeners.PlayerJoinListener;
@@ -54,6 +56,8 @@ public class Core extends JavaPlugin{
 		Plugin.getCommand("message", new MessageCommand()); //Finished 
 		//TODO MANUALLY ADD PERMISSION CHECKS TO COMMANDS!
 		Plugin.getCommand("tempban", new TempBanCommand()); //Permission testing
+		Plugin.getCommand("ban", new BanCommand()); //Finished
+		Plugin.getCommand("unabn", new UnbanCommand());//Testing
 		
 	}
 	public void registerPermissions() {

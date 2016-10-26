@@ -14,6 +14,7 @@ import com.njdaeger.essentials.enums.Error;
 import com.njdaeger.essentials.enums.Permission;
 import com.njdaeger.essentials.exceptions.UnknownException;
 import com.njdaeger.essentials.utils.ServerBan;
+import com.njdaeger.essentials.utils.TargetHasPermission;
 
 public class TempBanCommand extends BukkitCommand{
 	
@@ -21,14 +22,15 @@ public class TempBanCommand extends BukkitCommand{
 		super("tempban");
 		List<String> a = Arrays.asList("temp", "tb", "bantemp");
 		this.description = "Temp ban a player.";
-		this.usageMessage = "/tempban <player> <time> [reason]";
+		this.usageMessage = "/tempban <player> <time:<d/h/m/s>> [reason]";
 		this.setAliases(a);
 	}
 
 	@Override
 	public boolean execute(CommandSender sndr, String label, String[] args) {
 		if (sndr instanceof Player) {
-			if (sndr.hasPermission(Permission.ESS_ALL.getPermission()) || sndr.hasPermission(Permission.ESS_TEMPBAN.getPermission()) || sndr.isOp()) {
+			Player player = (Player) sndr;
+			if (TargetHasPermission.check(player, Permission.ESS_TEMPBAN)) {
 				if (args.length <= 1) {
 					sndr.sendMessage(Error.NOT_ENOUGH_ARGS.sendError());
 					return true;
@@ -38,7 +40,7 @@ public class TempBanCommand extends BukkitCommand{
 					sndr.sendMessage(Error.UNKNOWN_PLAYER.sendError());
 					return true;
 				}
-				if (target.equals(sndr) || target.hasPermission(Permission.ESS_BAN_EXEMPT.getPermission()) || target.isOp() || target.hasPermission(Permission.ESS_ALL.getPermission())) {
+				if (target.equals(sndr) || TargetHasPermission.check(player, Permission.ESS_BAN_EXEMPT)) {
 					sndr.sendMessage(Error.CANNOT_BAN_TARGET.sendError());
 					return true;
 				}
@@ -48,10 +50,13 @@ public class TempBanCommand extends BukkitCommand{
 				}
 				if (args.length > 2) {
 					String why = "";
+					String finalreason = "";
 					for (String reason : args) {
 						why = (why + reason + " ");
+						String split[] = why.split(" ", 2);
+						finalreason = split[2].split(" ", 2).toString();
 					}
-					ServerBan.newTempBan(target, ChatColor.translateAlternateColorCodes('&', why), sndr, args[1]);
+					ServerBan.newTempBan(target, ChatColor.translateAlternateColorCodes('&', finalreason), sndr, args[1]);
 					return true;
 					
 				}
@@ -84,11 +89,16 @@ public class TempBanCommand extends BukkitCommand{
 				return true;
 			}
 			if (args.length > 2) {
-				String why = "";
+				String a = "";
+				String finalreason = "";
 				for (String reason : args) {
-					why = (why + reason + " ");
+					a = (a + reason + " ");
+					String split[] = reason.split(" ");
+					finalreason = split[3];
+					
+					
 				}
-				ServerBan.newTempBan(target, ChatColor.translateAlternateColorCodes('&', why), sndr, args[1]);
+				ServerBan.newTempBan(target, ChatColor.translateAlternateColorCodes('&', finalreason), sndr, args[1]);
 				return true;
 				
 			}

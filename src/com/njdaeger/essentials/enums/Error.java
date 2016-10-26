@@ -184,6 +184,15 @@ public enum Error{
 			String error = ChatColor.RED + "Insert a \":\" between the time and the ban type.";
 			return error;
 		}
+	},
+	PLAYER_NOT_BANNED {
+
+		@Override
+		public String sendError() {
+			String error = ChatColor.RED + "Target player is not banned.";
+			return error;
+		}
+		
 	};
 	
 	public abstract String sendError();
